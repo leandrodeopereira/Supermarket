@@ -5,6 +5,7 @@ namespace SupermarketApi
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using SupermarketApi.Data.DependencyInjection;
+    using SupermarketApi.Repositories.DependencyInjection;
 
     [ExcludeFromCodeCoverage]
     [SuppressMessage("Performance", "CA1812: Avoid uninstantiated internal classes", Justification = "Instantiated through reflection")]
@@ -32,7 +33,8 @@ namespace SupermarketApi
         {
             _ = serviceCollection
                 .AddControllers().Services
-                .AddDataInfrastruture(this.Configuration);
+                .AddDataInfrastruture(this.Configuration)
+                .AddRepositories();
         }
     }
 }
