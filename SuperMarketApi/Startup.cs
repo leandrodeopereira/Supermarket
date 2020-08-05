@@ -4,6 +4,7 @@ namespace SuperMarketApi
     using Microsoft.AspNetCore.Builder;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using SuperMarketApi.Data.DependencyInjection;
 
     [SuppressMessage("Performance", "CA1812: Avoid uninstantiated internal classes", Justification = "Instantiated through reflection")]
     internal sealed class Startup
@@ -26,9 +27,11 @@ namespace SuperMarketApi
             });
         }
 
-        public static void ConfigureServices(IServiceCollection serviceCollection)
+        public void ConfigureServices(IServiceCollection serviceCollection)
         {
-            _ = serviceCollection.AddControllers();
+            _ = serviceCollection
+                .AddControllers().Services
+                .AddDataInfrastruture(this.Configuration);
         }
     }
 }
