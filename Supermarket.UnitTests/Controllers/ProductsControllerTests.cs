@@ -18,8 +18,8 @@ namespace SupermarketApi.Controllers
             // Arrange
             var expectedProducts = new List<Product>
             {
-                new Product(1, "Product 1"),
-                new Product(2, "Product 2"),
+                new Product { Id = 1, Name = "Product 1" },
+                new Product { Id = 2, Name = "Product 2" },
             };
 
             var productRepository = Substitute.For<IProductRepository>();
@@ -43,8 +43,8 @@ namespace SupermarketApi.Controllers
             // Arrange
             var expectedProducts = new List<Product>
             {
-                new Product(1, "Product 1"),
-                new Product(2, "Product 2"),
+                new Product { Id = 1, Name = "Product 1" },
+                new Product { Id = 2, Name = "Product 2" },
             };
 
             var productRepository = Substitute.For<IProductRepository>();

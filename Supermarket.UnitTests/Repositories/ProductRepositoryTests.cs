@@ -19,7 +19,7 @@ namespace SupermarketApi.Repositories
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
-            var expectedProduct = new Product(1, "Product 1");
+            var expectedProduct = new Product { Id = 1, Name = "Product 1" };
 
             using (var context = new StoreContext(options))
             {
@@ -48,8 +48,8 @@ namespace SupermarketApi.Repositories
 
             var expectedProducts = new List<Product>
             {
-                new Product(1, "Product 1"),
-                new Product(2, "Product 2"),
+                new Product { Id = 1, Name = "Product 1" },
+                new Product { Id = 2, Name = "Product 2" },
             };
 
             using (var context = new StoreContext(options))
