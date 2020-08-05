@@ -6,6 +6,7 @@ namespace SupermarketApi
     using Microsoft.Extensions.DependencyInjection;
     using SupermarketApi.Data.DependencyInjection;
 
+    [ExcludeFromCodeCoverage]
     [SuppressMessage("Performance", "CA1812: Avoid uninstantiated internal classes", Justification = "Instantiated through reflection")]
     internal sealed class Startup
     {
