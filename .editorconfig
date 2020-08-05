@@ -34,3 +34,6 @@ dotnet_analyzer_diagnostic.category-Style.severity = error
 
 # SA1601: Partial elements should be documented
 dotnet_diagnostic.SA1601.severity = none
+
+# CA1812: Avoid uninstantiated internal classes
+dotnet_diagnostic.CA1812.severity = none
