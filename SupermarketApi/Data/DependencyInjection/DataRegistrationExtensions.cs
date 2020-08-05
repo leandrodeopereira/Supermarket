@@ -1,10 +1,12 @@
 ﻿namespace SupermarketApi.Data.DependencyInjection
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
 
+    [ExcludeFromCodeCoverage]
     public static class DataRegistrationExtensions
     {
         public static IServiceCollection AddDataInfrastruture(this IServiceCollection serviceCollection, IConfiguration configuration)
