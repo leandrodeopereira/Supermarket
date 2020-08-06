@@ -10,9 +10,8 @@
         public StoreContext(DbContextOptions<StoreContext> options)
             : base(options)
         {
-            this.Products = this.Set<Product>();
         }
 
-        public DbSet<Product> Products { get; set; }
+        public DbSet<Product> Products => this.Set<Product>();
     }
 }
