@@ -13,6 +13,31 @@ namespace SupermarketApi.Controllers
     public sealed class ProductsControllerTests
     {
         [TestMethod]
+        public async Task GettingProductBrandsShouldReturnExpectedProductBrands()
+        {
+            // Arrange
+            var expectedProductBrands = new List<ProductBrand>
+            {
+                new ProductBrand { Id = 1, Name = "Product Brand 1" },
+                new ProductBrand { Id = 2, Name = "Product Brand 2" },
+            };
+
+            var productRepository = Substitute.For<IProductRepository>();
+            _ = productRepository
+                .GetProductBrands()
+                .Returns(expectedProductBrands);
+
+            var productController = new ProductsController(productRepository);
+
+            // Act
+            var productBrandsActionResult = await productController.GetProducts().ConfigureAwait(false);
+
+            // Assert
+            productBrandsActionResult.Result.Should().BeOfType<OkObjectResult>()
+                .Which.Value.Should().BeEquivalentTo(expectedProductBrands);
+        }
+
+        [TestMethod]
         public async Task GettingProductsShouldReturnExpectedProducts()
         {
             // Arrange
@@ -35,6 +60,31 @@ namespace SupermarketApi.Controllers
             // Assert
             productsActionResult.Result.Should().BeOfType<OkObjectResult>()
                 .Which.Value.Should().BeEquivalentTo(expectedProducts);
+        }
+
+        [TestMethod]
+        public async Task GettingProductTypesShouldReturnExpectedProductTypes()
+        {
+            // Arrange
+            var expectedProductTypes = new List<ProductType>
+            {
+                new ProductType { Id = 1, Name = "Product Type 1" },
+                new ProductType { Id = 2, Name = "Product Type 2" },
+            };
+
+            var productRepository = Substitute.For<IProductRepository>();
+            _ = productRepository
+                .GetProductTypes()
+                .Returns(expectedProductTypes);
+
+            var productController = new ProductsController(productRepository);
+
+            // Act
+            var productTypesActionResult = await productController.GetProductTypes().ConfigureAwait(false);
+
+            // Assert
+            productTypesActionResult.Result.Should().BeOfType<OkObjectResult>()
+                .Which.Value.Should().BeEquivalentTo(expectedProductTypes);
         }
 
         [TestMethod]
