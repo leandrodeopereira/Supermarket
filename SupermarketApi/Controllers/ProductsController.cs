@@ -17,14 +17,6 @@
             this.productRepository = productRepository;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<ICollection<Product>>> GetProducts()
-        {
-            var products = await this.productRepository.GetProducts().ConfigureAwait(false);
-
-            return this.Ok(products);
-        }
-
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProduct(int id)
         {
@@ -37,6 +29,14 @@
                 { } => this.Ok(product),
                 _ => this.NotFound(),
             };
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<ICollection<Product>>> GetProducts()
+        {
+            var products = await this.productRepository.GetProducts().ConfigureAwait(false);
+
+            return this.Ok(products);
         }
     }
 }
