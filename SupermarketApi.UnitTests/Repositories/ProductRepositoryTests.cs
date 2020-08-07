@@ -19,7 +19,11 @@ namespace SupermarketApi.Repositories
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
-            var expectedProduct = new Product { Id = 1, Name = "Product 1" };
+            var expectedProduct = new Product
+            {
+                Id = 1,
+                Name = "Product 1",
+            };
 
             using (var context = new StoreContext(options))
             {
@@ -36,6 +40,37 @@ namespace SupermarketApi.Repositories
 
                 // Assert
                 product.Should().BeEquivalentTo(expectedProduct);
+            }
+        }
+
+        [TestMethod]
+        public async Task GettingProductBrandsShouldReturnExpectedProductBrands()
+        {
+            var options = new DbContextOptionsBuilder<StoreContext>()
+                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+                .Options;
+
+            var expectedProductBrands = new List<ProductBrand>
+            {
+                new ProductBrand { Id = 1, Name = "Product Brand 1" },
+                new ProductBrand { Id = 2, Name = "Product Brand 2" },
+            };
+
+            using (var context = new StoreContext(options))
+            {
+                context.ProductBrands.AddRange(expectedProductBrands);
+                _ = context.SaveChanges();
+            }
+
+            using (var context = new StoreContext(options))
+            {
+                IProductRepository productRepository = new ProductRepository(context);
+
+                // Act
+                var productBrands = await productRepository.GetProductBrands().ConfigureAwait(false);
+
+                // Assert
+                _ = productBrands.Should().BeEquivalentTo(expectedProductBrands);
             }
         }
 
@@ -67,6 +102,37 @@ namespace SupermarketApi.Repositories
 
                 // Assert
                 _ = products.Should().BeEquivalentTo(expectedProducts);
+            }
+        }
+
+        [TestMethod]
+        public async Task GettingProductTypesShouldReturnExpectedProductTypes()
+        {
+            var options = new DbContextOptionsBuilder<StoreContext>()
+                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+                .Options;
+
+            var expectedProductTypes = new List<ProductType>
+            {
+                new ProductType { Id = 1, Name = "Product Type 1" },
+                new ProductType { Id = 2, Name = "Product Type 2" },
+            };
+
+            using (var context = new StoreContext(options))
+            {
+                context.ProductTypes.AddRange(expectedProductTypes);
+                _ = context.SaveChanges();
+            }
+
+            using (var context = new StoreContext(options))
+            {
+                IProductRepository productRepository = new ProductRepository(context);
+
+                // Act
+                var productTypes = await productRepository.GetProductTypes().ConfigureAwait(false);
+
+                // Assert
+                _ = productTypes.Should().BeEquivalentTo(expectedProductTypes);
             }
         }
     }

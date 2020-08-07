@@ -8,6 +8,10 @@
     {
         Task<Product?> GetProduct(int id);
 
+        Task<IReadOnlyCollection<ProductBrand>> GetProductBrands();
+
         Task<IReadOnlyCollection<Product>> GetProducts();
+
+        Task<IReadOnlyCollection<ProductType>> GetProductTypes();
     }
 }
