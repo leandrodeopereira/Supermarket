@@ -31,12 +31,28 @@
             };
         }
 
+        [HttpGet("brands")]
+        public async Task<ActionResult<ICollection<ProductBrand>>> GetProductBrands()
+        {
+            var productBrands = await this.productRepository.GetProductBrands().ConfigureAwait(false);
+
+            return this.Ok(productBrands);
+        }
+
         [HttpGet]
         public async Task<ActionResult<ICollection<Product>>> GetProducts()
         {
             var products = await this.productRepository.GetProducts().ConfigureAwait(false);
 
             return this.Ok(products);
+        }
+
+        [HttpGet("types")]
+        public async Task<ActionResult<ICollection<ProductType>>> GetProductTypes()
+        {
+            var productTypes = await this.productRepository.GetProductTypes().ConfigureAwait(false);
+
+            return this.Ok(productTypes);
         }
     }
 }
