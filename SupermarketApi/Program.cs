@@ -27,6 +27,7 @@ namespace SupermarketApi
                 {
                     var contex = services.GetRequiredService<StoreContext>();
                     await contex.Database.MigrateAsync().ConfigureAwait(false);
+                    await StoreContextSeed.SeedAsync(contex, loggerFactory).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
