@@ -5,7 +5,7 @@
 
 # Custom ignores from me
 appsettings.json
-*.db
+*.db*
 
 # User-specific files
 *.rsuser
