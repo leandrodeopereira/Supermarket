@@ -30,7 +30,7 @@ namespace SupermarketApi.Controllers
             var productController = new ProductsController(productRepository);
 
             // Act
-            var productBrandsActionResult = await productController.GetProducts().ConfigureAwait(false);
+            var productBrandsActionResult = await productController.GetProductBrands().ConfigureAwait(false);
 
             // Assert
             productBrandsActionResult.Result.Should().BeOfType<OkObjectResult>()
