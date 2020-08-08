@@ -1,10 +1,12 @@
 namespace SupermarketApi
 {
     using System.Diagnostics.CodeAnalysis;
+    using AutoMapper;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using SupermarketApi.Data.DependencyInjection;
+    using SupermarketApi.Profiles;
     using SupermarketApi.Repositories.DependencyInjection;
 
     [ExcludeFromCodeCoverage]
@@ -32,6 +34,7 @@ namespace SupermarketApi
         public void ConfigureServices(IServiceCollection serviceCollection)
         {
             _ = serviceCollection
+                .AddAutoMapper(typeof(MappingProfiles))
                 .AddControllers().Services
                 .AddDataInfrastruture(this.Configuration)
                 .AddRepositories();
