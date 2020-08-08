@@ -8,6 +8,7 @@ namespace SupermarketApi.Controllers
     using NSubstitute;
     using SupermarketApi.Entities;
     using SupermarketApi.Repositories;
+    using SupermarketApi.Specifications;
 
     [TestClass]
     public sealed class ProductsControllerTests
@@ -49,7 +50,7 @@ namespace SupermarketApi.Controllers
 
             var productRepository = Substitute.For<IRepository<Product>>();
             _ = productRepository
-                .GetAllAsync()
+                .GetAsync(Arg.Any<ASpecWithInclude<Product>>())
                 .Returns(expectedProducts);
 
             var productController = CreateProductsController(productRepository: productRepository);
@@ -99,7 +100,7 @@ namespace SupermarketApi.Controllers
 
             var productRepository = Substitute.For<IRepository<Product>>();
             _ = productRepository
-                .GetByIdAsync(1)
+                .GetEntityWithSpec(Arg.Any<ASpecWithInclude<Product>>())
                 .Returns(expectedProducts[0]);
 
             var productController = CreateProductsController(productRepository: productRepository);

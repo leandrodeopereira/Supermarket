@@ -5,6 +5,7 @@
     using Microsoft.EntityFrameworkCore;
     using SupermarketApi.Data;
     using SupermarketApi.Entities;
+    using SupermarketApi.Specifications;
 
     internal class BaseRepository<T> : IRepository<T>
         where T : BaseEntity
@@ -23,11 +24,21 @@
                 .ConfigureAwait(false);
         }
 
+        async Task<IReadOnlyCollection<T>> IRepository<T>.GetAsync(ASpecWithInclude<T> spec)
+        {
+            return await this.storeContext.ApplySpecification(spec).ToListAsync().ConfigureAwait(false);
+        }
+
         async Task<T> IRepository<T>.GetByIdAsync(int id)
         {
             return await this.storeContext.Set<T>()
                 .FindAsync(id)
                 .ConfigureAwait(false);
+        }
+
+        async Task<T> IRepository<T>.GetEntityWithSpec(ASpecWithInclude<T> spec)
+        {
+            return await this.storeContext.ApplySpecification(spec).FirstOrDefaultAsync().ConfigureAwait(false);
         }
     }
 }
