@@ -22,12 +22,12 @@ namespace SupermarketApi.Controllers
                 new ProductBrand { Id = 2, Name = "Product Brand 2" },
             };
 
-            var productRepository = Substitute.For<IProductRepository>();
-            _ = productRepository
-                .GetProductBrands()
+            var productBrandRepository = Substitute.For<IRepository<ProductBrand>>();
+            _ = productBrandRepository
+                .GetAllAsync()
                 .Returns(expectedProductBrands);
 
-            var productController = new ProductsController(productRepository);
+            var productController = CreateProductsController(productBrandRepository: productBrandRepository);
 
             // Act
             var productBrandsActionResult = await productController.GetProductBrands().ConfigureAwait(false);
@@ -47,12 +47,12 @@ namespace SupermarketApi.Controllers
                 new Product { Id = 2, Name = "Product 2" },
             };
 
-            var productRepository = Substitute.For<IProductRepository>();
+            var productRepository = Substitute.For<IRepository<Product>>();
             _ = productRepository
-                .GetProducts()
+                .GetAllAsync()
                 .Returns(expectedProducts);
 
-            var productController = new ProductsController(productRepository);
+            var productController = CreateProductsController(productRepository: productRepository);
 
             // Act
             var productsActionResult = await productController.GetProducts().ConfigureAwait(false);
@@ -72,12 +72,12 @@ namespace SupermarketApi.Controllers
                 new ProductType { Id = 2, Name = "Product Type 2" },
             };
 
-            var productRepository = Substitute.For<IProductRepository>();
-            _ = productRepository
-                .GetProductTypes()
+            var productTypeRepository = Substitute.For<IRepository<ProductType>>();
+            _ = productTypeRepository
+                .GetAllAsync()
                 .Returns(expectedProductTypes);
 
-            var productController = new ProductsController(productRepository);
+            var productController = CreateProductsController(productTypeRepository: productTypeRepository);
 
             // Act
             var productTypesActionResult = await productController.GetProductTypes().ConfigureAwait(false);
@@ -97,12 +97,12 @@ namespace SupermarketApi.Controllers
                 new Product { Id = 2, Name = "Product 2" },
             };
 
-            var productRepository = Substitute.For<IProductRepository>();
+            var productRepository = Substitute.For<IRepository<Product>>();
             _ = productRepository
-                .GetProduct(1)
+                .GetByIdAsync(1)
                 .Returns(expectedProducts[0]);
 
-            var productController = new ProductsController(productRepository);
+            var productController = CreateProductsController(productRepository: productRepository);
 
             // Act
             var productActionResult = await productController.GetProduct(1).ConfigureAwait(false);
@@ -116,13 +116,24 @@ namespace SupermarketApi.Controllers
         public async Task GettingProductByIdGivenIdDoesnotExistShouldReturnNotFound()
         {
             // Arrange
-            var productController = new ProductsController(Substitute.For<IProductRepository>());
+            var productController = CreateProductsController(productRepository: Substitute.For<IRepository<Product>>());
 
             // Act
             var notFoundActionResult = await productController.GetProduct(1).ConfigureAwait(false);
 
             // Assert
             _ = notFoundActionResult.Result.Should().BeOfType<NotFoundResult>();
+        }
+
+        private static ProductsController CreateProductsController(
+            IRepository<Product> productRepository = default!,
+            IRepository<ProductBrand> productBrandRepository = default!,
+            IRepository<ProductType> productTypeRepository = default!)
+        {
+            return new ProductsController(
+                productRepository ?? Substitute.For<IRepository<Product>>(),
+                productBrandRepository ?? Substitute.For<IRepository<ProductBrand>>(),
+                productTypeRepository ?? Substitute.For<IRepository<ProductType>>());
         }
     }
 }

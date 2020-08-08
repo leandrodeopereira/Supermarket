@@ -10,7 +10,7 @@
         {
             _ = serviceCollection ?? throw new ArgumentNullException(nameof(serviceCollection));
 
-            return serviceCollection.AddTransient<IProductRepository, ProductRepository>();
+            return serviceCollection.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
         }
     }
 }
