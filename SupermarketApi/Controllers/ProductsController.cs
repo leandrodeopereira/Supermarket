@@ -10,18 +10,25 @@
     [Route("api/[controller]")]
     public sealed class ProductsController : ControllerBase
     {
-        private readonly IProductRepository productRepository;
+        private readonly IRepository<Product> productRepository;
+        private readonly IRepository<ProductBrand> productBrandRepository;
+        private readonly IRepository<ProductType> productTypeRepository;
 
-        public ProductsController(IProductRepository productRepository)
+        public ProductsController(
+            IRepository<Product> productRepository,
+            IRepository<ProductBrand> productBrandRepository,
+            IRepository<ProductType> productTypeRepository)
         {
             this.productRepository = productRepository;
+            this.productBrandRepository = productBrandRepository;
+            this.productTypeRepository = productTypeRepository;
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProduct(int id)
         {
             var product = await this.productRepository
-                .GetProduct(id)
+                .GetByIdAsync(id)
                 .ConfigureAwait(false);
 
             return product switch
@@ -34,7 +41,7 @@
         [HttpGet("brands")]
         public async Task<ActionResult<ICollection<ProductBrand>>> GetProductBrands()
         {
-            var productBrands = await this.productRepository.GetProductBrands().ConfigureAwait(false);
+            var productBrands = await this.productBrandRepository.GetAllAsync().ConfigureAwait(false);
 
             return this.Ok(productBrands);
         }
@@ -42,7 +49,7 @@
         [HttpGet]
         public async Task<ActionResult<ICollection<Product>>> GetProducts()
         {
-            var products = await this.productRepository.GetProducts().ConfigureAwait(false);
+            var products = await this.productRepository.GetAllAsync().ConfigureAwait(false);
 
             return this.Ok(products);
         }
@@ -50,7 +57,7 @@
         [HttpGet("types")]
         public async Task<ActionResult<ICollection<ProductType>>> GetProductTypes()
         {
-            var productTypes = await this.productRepository.GetProductTypes().ConfigureAwait(false);
+            var productTypes = await this.productTypeRepository.GetAllAsync().ConfigureAwait(false);
 
             return this.Ok(productTypes);
         }
