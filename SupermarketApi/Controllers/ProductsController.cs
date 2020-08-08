@@ -5,6 +5,7 @@
     using Microsoft.AspNetCore.Mvc;
     using SupermarketApi.Entities;
     using SupermarketApi.Repositories;
+    using SupermarketApi.Specifications;
 
     [ApiController]
     [Route("api/[controller]")]
@@ -27,8 +28,10 @@
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProduct(int id)
         {
+            var spec = new ProductsWithTypesAndBrandsSpecification(id);
+
             var product = await this.productRepository
-                .GetByIdAsync(id)
+                .GetEntityWithSpec(spec)
                 .ConfigureAwait(false);
 
             return product switch
@@ -49,7 +52,9 @@
         [HttpGet]
         public async Task<ActionResult<ICollection<Product>>> GetProducts()
         {
-            var products = await this.productRepository.GetAllAsync().ConfigureAwait(false);
+            var spec = new ProductsWithTypesAndBrandsSpecification();
+
+            var products = await this.productRepository.GetAsync(spec).ConfigureAwait(false);
 
             return this.Ok(products);
         }
