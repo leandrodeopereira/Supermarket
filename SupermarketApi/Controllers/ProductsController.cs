@@ -2,7 +2,9 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using AutoMapper;
     using Microsoft.AspNetCore.Mvc;
+    using SupermarketApi.Dtos;
     using SupermarketApi.Entities;
     using SupermarketApi.Repositories;
     using SupermarketApi.Specifications;
@@ -14,19 +16,22 @@
         private readonly IRepository<Product> productRepository;
         private readonly IRepository<ProductBrand> productBrandRepository;
         private readonly IRepository<ProductType> productTypeRepository;
+        private readonly IMapper mapper;
 
         public ProductsController(
             IRepository<Product> productRepository,
             IRepository<ProductBrand> productBrandRepository,
-            IRepository<ProductType> productTypeRepository)
+            IRepository<ProductType> productTypeRepository,
+            IMapper mapper)
         {
             this.productRepository = productRepository;
             this.productBrandRepository = productBrandRepository;
             this.productTypeRepository = productTypeRepository;
+            this.mapper = mapper;
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetProduct(int id)
+        public async Task<ActionResult<ProductDto>> GetProduct(int id)
         {
             var spec = new ProductsWithTypesAndBrandsSpecification(id);
 
@@ -36,7 +41,7 @@
 
             return product switch
             {
-                { } => this.Ok(product),
+                { } => this.Ok(this.mapper.Map<Product, ProductDto>(product)),
                 _ => this.NotFound(),
             };
         }
@@ -56,7 +61,7 @@
 
             var products = await this.productRepository.GetAsync(spec).ConfigureAwait(false);
 
-            return this.Ok(products);
+            return this.Ok(this.mapper.Map<IReadOnlyCollection<Product>, IReadOnlyCollection<ProductDto>>(products));
         }
 
         [HttpGet("types")]
