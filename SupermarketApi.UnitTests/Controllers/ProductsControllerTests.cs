@@ -2,10 +2,12 @@ namespace SupermarketApi.Controllers
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using AutoMapper;
     using FluentAssertions;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using NSubstitute;
+    using SupermarketApi.Dtos;
     using SupermarketApi.Entities;
     using SupermarketApi.Repositories;
     using SupermarketApi.Specifications;
@@ -42,25 +44,38 @@ namespace SupermarketApi.Controllers
         public async Task GettingProductsShouldReturnExpectedProducts()
         {
             // Arrange
-            var expectedProducts = new List<Product>
+            var products = new List<Product>
             {
                 new Product { Id = 1, Name = "Product 1" },
                 new Product { Id = 2, Name = "Product 2" },
             };
 
+            var expectedProductsDto = new List<ProductDto>
+            {
+                new ProductDto { Id = 1, Name = "Product 1" },
+                new ProductDto { Id = 2, Name = "Product 2" },
+            };
+
             var productRepository = Substitute.For<IRepository<Product>>();
             _ = productRepository
                 .GetAsync(Arg.Any<ASpecWithInclude<Product>>())
-                .Returns(expectedProducts);
+                .Returns(products);
 
-            var productController = CreateProductsController(productRepository: productRepository);
+            var mapper = Substitute.For<IMapper>();
+            _ = mapper
+                .Map<IReadOnlyCollection<Product>, IReadOnlyCollection<ProductDto>>(products)
+                .Returns(expectedProductsDto);
+
+            var productController = CreateProductsController(
+                productRepository: productRepository,
+                mapper: mapper);
 
             // Act
             var productsActionResult = await productController.GetProducts().ConfigureAwait(false);
 
             // Assert
             productsActionResult.Result.Should().BeOfType<OkObjectResult>()
-                .Which.Value.Should().BeEquivalentTo(expectedProducts);
+                .Which.Value.Should().BeEquivalentTo(expectedProductsDto);
         }
 
         [TestMethod]
@@ -92,25 +107,34 @@ namespace SupermarketApi.Controllers
         public async Task GettingProductByIdShouldReturnExpectedProduct()
         {
             // Arrange
-            var expectedProducts = new List<Product>
+            var products = new List<Product>
             {
                 new Product { Id = 1, Name = "Product 1" },
                 new Product { Id = 2, Name = "Product 2" },
             };
 
+            var expectedProductDto = new ProductDto { Id = 1, Name = "Product 1" };
+
             var productRepository = Substitute.For<IRepository<Product>>();
             _ = productRepository
                 .GetEntityWithSpec(Arg.Any<ASpecWithInclude<Product>>())
-                .Returns(expectedProducts[0]);
+                .Returns(products[0]);
 
-            var productController = CreateProductsController(productRepository: productRepository);
+            var mapper = Substitute.For<IMapper>();
+            _ = mapper
+                .Map<Product, ProductDto>(products[0])
+                .Returns(expectedProductDto);
+
+            var productController = CreateProductsController(
+                productRepository: productRepository,
+                mapper: mapper);
 
             // Act
             var productActionResult = await productController.GetProduct(1).ConfigureAwait(false);
 
             // Assert
             _ = productActionResult.Result.Should().BeOfType<OkObjectResult>()
-                .Which.Value.Should().BeSameAs(expectedProducts[0]);
+                .Which.Value.Should().BeSameAs(expectedProductDto);
         }
 
         [TestMethod]
@@ -129,12 +153,14 @@ namespace SupermarketApi.Controllers
         private static ProductsController CreateProductsController(
             IRepository<Product> productRepository = default!,
             IRepository<ProductBrand> productBrandRepository = default!,
-            IRepository<ProductType> productTypeRepository = default!)
+            IRepository<ProductType> productTypeRepository = default!,
+            IMapper mapper = default!)
         {
             return new ProductsController(
                 productRepository ?? Substitute.For<IRepository<Product>>(),
                 productBrandRepository ?? Substitute.For<IRepository<ProductBrand>>(),
-                productTypeRepository ?? Substitute.For<IRepository<ProductType>>());
+                productTypeRepository ?? Substitute.For<IRepository<ProductType>>(),
+                mapper ?? Substitute.For<IMapper>());
         }
     }
 }
