@@ -1,19 +1,15 @@
 namespace SupermarketApi
 {
     using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
     using AutoMapper;
     using Microsoft.AspNetCore.Builder;
-    using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.OpenApi.Models;
     using SupermarketApi.Data.DependencyInjection;
-    using SupermarketApi.Errors;
+    using SupermarketApi.Extensions;
     using SupermarketApi.Mapping.DependecyInjection;
     using SupermarketApi.Middleware;
     using SupermarketApi.Profiles;
-    using SupermarketApi.Repositories.DependencyInjection;
 
     [ExcludeFromCodeCoverage]
     [SuppressMessage("Performance", "CA1812: Avoid uninstantiated internal classes", Justification = "Instantiated through reflection")]
@@ -34,35 +30,19 @@ namespace SupermarketApi
                 .UseHttpsRedirection()
                 .UseRouting()
                 .UseStaticFiles()
-                .UseSwagger()
-                .UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Supermarket API v1"))
-                .UseEndpoints(endpoints =>
-            {
-                _ = endpoints.MapControllers();
-            });
+                .UseSwaggerDocumentation()
+                .UseEndpoints(endpoints => endpoints.MapControllers());
         }
 
         public void ConfigureServices(IServiceCollection serviceCollection)
         {
             _ = serviceCollection
-                .AddAutoMapper(typeof(MappingProfiles))
                 .AddControllers().Services
-                .Configure<ApiBehaviorOptions>(options =>
-                {
-                    options.InvalidModelStateResponseFactory = actionContext =>
-                    {
-                        var errors = actionContext.ModelState
-                            .Where(e => e.Value.Errors.Count > 0)
-                            .SelectMany(x => x.Value.Errors)
-                            .Select(x => x.ErrorMessage).ToArray();
-
-                        return new BadRequestObjectResult(new ApiValidationErrorResponse(errors));
-                    };
-                })
+                .AddApplicationServices()
+                .AddAutoMapper(typeof(MappingProfiles))
                 .AddDataInfrastruture(this.Configuration)
                 .AddMapping()
-                .AddRepositories()
-                .AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo { Title = "Supermarket API", Version = "v1" }));
+                .AddSwaggerDocumentation();
         }
     }
 }
