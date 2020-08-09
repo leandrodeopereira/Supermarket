@@ -6,6 +6,7 @@ namespace SupermarketApi
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using SupermarketApi.Data.DependencyInjection;
+    using SupermarketApi.Mapping.DependecyInjection;
     using SupermarketApi.Profiles;
     using SupermarketApi.Repositories.DependencyInjection;
 
@@ -23,6 +24,7 @@ namespace SupermarketApi
         public static void Configure(IApplicationBuilder applicationBuilder)
         {
             _ = applicationBuilder
+                .UseStatusCodePagesWithReExecute("/errors/{0}")
                 .UseHttpsRedirection()
                 .UseRouting()
                 .UseStaticFiles()
@@ -38,6 +40,7 @@ namespace SupermarketApi
                 .AddAutoMapper(typeof(MappingProfiles))
                 .AddControllers().Services
                 .AddDataInfrastruture(this.Configuration)
+                .AddMapping()
                 .AddRepositories();
         }
     }
