@@ -1,6 +1,7 @@
 namespace SupermarketApi.Controllers
 {
     using System.Collections.Generic;
+    using System.Net;
     using System.Threading.Tasks;
     using AutoMapper;
     using FluentAssertions;
@@ -9,8 +10,11 @@ namespace SupermarketApi.Controllers
     using NSubstitute;
     using SupermarketApi.Dtos;
     using SupermarketApi.Entities;
+    using SupermarketApi.Errors;
+    using SupermarketApi.Mapping;
     using SupermarketApi.Repositories;
     using SupermarketApi.Specifications;
+    using static System.Net.HttpStatusCode;
 
     [TestClass]
     public sealed class ProductsControllerTests
@@ -141,26 +145,38 @@ namespace SupermarketApi.Controllers
         public async Task GettingProductByIdGivenIdDoesnotExistShouldReturnNotFound()
         {
             // Arrange
-            var productController = CreateProductsController(productRepository: Substitute.For<IRepository<Product>>());
+            var expectedApiResponse = new ApiResponse(NotFound);
+
+            var apiResponseBuilder = Substitute.For<IBuilder<HttpStatusCode, ApiResponse>>();
+            _ = apiResponseBuilder
+                .Build(NotFound)
+                .Returns(expectedApiResponse);
+
+            var productController = CreateProductsController(
+                productRepository: Substitute.For<IRepository<Product>>(),
+                apiResponseBuilder: apiResponseBuilder);
 
             // Act
             var notFoundActionResult = await productController.GetProduct(1).ConfigureAwait(false);
 
             // Assert
-            _ = notFoundActionResult.Result.Should().BeOfType<NotFoundResult>();
+            _ = notFoundActionResult.Result.Should().BeOfType<NotFoundObjectResult>()
+                .Which.Value.Should().Be(expectedApiResponse);
         }
 
         private static ProductsController CreateProductsController(
             IRepository<Product> productRepository = default!,
             IRepository<ProductBrand> productBrandRepository = default!,
             IRepository<ProductType> productTypeRepository = default!,
-            IMapper mapper = default!)
+            IMapper mapper = default!,
+            IBuilder<HttpStatusCode, ApiResponse> apiResponseBuilder = default!)
         {
             return new ProductsController(
                 productRepository ?? Substitute.For<IRepository<Product>>(),
                 productBrandRepository ?? Substitute.For<IRepository<ProductBrand>>(),
                 productTypeRepository ?? Substitute.For<IRepository<ProductType>>(),
-                mapper ?? Substitute.For<IMapper>());
+                mapper ?? Substitute.For<IMapper>(),
+                apiResponseBuilder ?? Substitute.For<IBuilder<HttpStatusCode, ApiResponse>>());
         }
     }
 }
