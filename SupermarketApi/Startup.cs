@@ -7,6 +7,7 @@ namespace SupermarketApi
     using Microsoft.Extensions.DependencyInjection;
     using SupermarketApi.Data.DependencyInjection;
     using SupermarketApi.Mapping.DependecyInjection;
+    using SupermarketApi.Middleware;
     using SupermarketApi.Profiles;
     using SupermarketApi.Repositories.DependencyInjection;
 
@@ -24,6 +25,7 @@ namespace SupermarketApi
         public static void Configure(IApplicationBuilder applicationBuilder)
         {
             _ = applicationBuilder
+                .UseMiddleware<ExceptionMiddleware>()
                 .UseStatusCodePagesWithReExecute("/errors/{0}")
                 .UseHttpsRedirection()
                 .UseRouting()
