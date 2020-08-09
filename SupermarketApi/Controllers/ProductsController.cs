@@ -1,11 +1,14 @@
 ﻿namespace SupermarketApi.Controllers
 {
     using System.Collections.Generic;
+    using System.Net;
     using System.Threading.Tasks;
     using AutoMapper;
     using Microsoft.AspNetCore.Mvc;
     using SupermarketApi.Dtos;
     using SupermarketApi.Entities;
+    using SupermarketApi.Errors;
+    using SupermarketApi.Mapping;
     using SupermarketApi.Repositories;
     using SupermarketApi.Specifications;
 
@@ -17,17 +20,20 @@
         private readonly IRepository<ProductBrand> productBrandRepository;
         private readonly IRepository<ProductType> productTypeRepository;
         private readonly IMapper mapper;
+        private readonly IBuilder<HttpStatusCode, ApiResponse> apiResponseBuilder;
 
         public ProductsController(
             IRepository<Product> productRepository,
             IRepository<ProductBrand> productBrandRepository,
             IRepository<ProductType> productTypeRepository,
-            IMapper mapper)
+            IMapper mapper,
+            IBuilder<HttpStatusCode, ApiResponse> apiResponseBuilder)
         {
             this.productRepository = productRepository;
             this.productBrandRepository = productBrandRepository;
             this.productTypeRepository = productTypeRepository;
             this.mapper = mapper;
+            this.apiResponseBuilder = apiResponseBuilder;
         }
 
         [HttpGet("{id}")]
@@ -42,7 +48,7 @@
             return product switch
             {
                 { } => this.Ok(this.mapper.Map<Product, ProductDto>(product)),
-                _ => this.NotFound(),
+                _ => this.NotFound(this.apiResponseBuilder.Build(HttpStatusCode.NotFound)),
             };
         }
 
