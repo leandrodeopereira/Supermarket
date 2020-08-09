@@ -6,6 +6,7 @@
     using SupermarketApi.Mapping;
 
     [ApiController]
+    [ApiExplorerSettings(IgnoreApi = true)]
     [Route("errors/{statuscode}")]
     public class ErrorController : ControllerBase
     {

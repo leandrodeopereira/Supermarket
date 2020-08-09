@@ -7,6 +7,7 @@ namespace SupermarketApi
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.OpenApi.Models;
     using SupermarketApi.Data.DependencyInjection;
     using SupermarketApi.Errors;
     using SupermarketApi.Mapping.DependecyInjection;
@@ -33,6 +34,8 @@ namespace SupermarketApi
                 .UseHttpsRedirection()
                 .UseRouting()
                 .UseStaticFiles()
+                .UseSwagger()
+                .UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Supermarket API v1"))
                 .UseEndpoints(endpoints =>
             {
                 _ = endpoints.MapControllers();
@@ -58,7 +61,8 @@ namespace SupermarketApi
                 })
                 .AddDataInfrastruture(this.Configuration)
                 .AddMapping()
-                .AddRepositories();
+                .AddRepositories()
+                .AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo { Title = "Supermarket API", Version = "v1" }));
         }
     }
 }
