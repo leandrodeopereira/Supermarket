@@ -1,15 +1,13 @@
 ﻿#nullable disable
 namespace SupermarketApi.Entities
 {
-    using System;
-
     public sealed class Product : BaseEntity
     {
         public string Description { get; set; }
 
         public string Name { get; set; }
 
-        public Uri PictureUrl { get; set; }
+        public string PicturePath { get; set; }
 
         public decimal Price { get; set; }
 
