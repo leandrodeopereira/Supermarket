@@ -25,6 +25,7 @@ namespace SupermarketApi
             _ = applicationBuilder
                 .UseHttpsRedirection()
                 .UseRouting()
+                .UseStaticFiles()
                 .UseEndpoints(endpoints =>
             {
                 _ = endpoints.MapControllers();
