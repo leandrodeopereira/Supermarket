@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SupermarketApi.Data.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    [Migration("20200807180348_InitialCreate")]
+    [Migration("20200809022444_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,17 +29,17 @@ namespace SupermarketApi.Data.Migrations
                         .HasColumnType("TEXT")
                         .HasMaxLength(100);
 
-                    b.Property<string>("PictureUrl")
+                    b.Property<string>("PicturePath")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("ProductBrandId")
+                    b.Property<int?>("ProductBrandId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ProductTypeId")
+                    b.Property<int?>("ProductTypeId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -83,15 +83,11 @@ namespace SupermarketApi.Data.Migrations
                 {
                     b.HasOne("SupermarketApi.Entities.ProductBrand", "ProductBrand")
                         .WithMany()
-                        .HasForeignKey("ProductBrandId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProductBrandId");
 
                     b.HasOne("SupermarketApi.Entities.ProductType", "ProductType")
                         .WithMany()
-                        .HasForeignKey("ProductTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProductTypeId");
                 });
 #pragma warning restore 612, 618
         }
