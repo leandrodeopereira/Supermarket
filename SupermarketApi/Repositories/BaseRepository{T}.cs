@@ -24,7 +24,7 @@
                 .ConfigureAwait(false);
         }
 
-        async Task<IReadOnlyCollection<T>> IRepository<T>.GetAsync(ASpecWithInclude<T> spec)
+        async Task<IReadOnlyCollection<T>> IRepository<T>.GetAsync(ASpecWithQueryOperations<T> spec)
         {
             return await this.storeContext.ApplySpecification(spec).ToListAsync().ConfigureAwait(false);
         }
@@ -36,7 +36,7 @@
                 .ConfigureAwait(false);
         }
 
-        async Task<T> IRepository<T>.GetEntityWithSpec(ASpecWithInclude<T> spec)
+        async Task<T> IRepository<T>.GetEntityWithSpec(ASpecWithQueryOperations<T> spec)
         {
             return await this.storeContext.ApplySpecification(spec).FirstOrDefaultAsync().ConfigureAwait(false);
         }

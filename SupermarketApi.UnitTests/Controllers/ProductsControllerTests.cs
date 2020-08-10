@@ -62,7 +62,7 @@ namespace SupermarketApi.Controllers
 
             var productRepository = Substitute.For<IRepository<Product>>();
             _ = productRepository
-                .GetAsync(Arg.Any<ASpecWithInclude<Product>>())
+                .GetAsync(Arg.Any<ASpecWithQueryOperations<Product>>())
                 .Returns(products);
 
             var mapper = Substitute.For<IMapper>();
@@ -121,7 +121,7 @@ namespace SupermarketApi.Controllers
 
             var productRepository = Substitute.For<IRepository<Product>>();
             _ = productRepository
-                .GetEntityWithSpec(Arg.Any<ASpecWithInclude<Product>>())
+                .GetEntityWithSpec(Arg.Any<ASpecWithQueryOperations<Product>>())
                 .Returns(products[0]);
 
             var mapper = Substitute.For<IMapper>();

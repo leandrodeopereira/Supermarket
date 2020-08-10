@@ -10,10 +10,10 @@
     {
         Task<IReadOnlyCollection<T>> GetAllAsync();
 
-        Task<IReadOnlyCollection<T>> GetAsync(ASpecWithInclude<T> spec);
+        Task<IReadOnlyCollection<T>> GetAsync(ASpecWithQueryOperations<T> spec);
 
         Task<T> GetByIdAsync(int id);
 
-        Task<T> GetEntityWithSpec(ASpecWithInclude<T> spec);
+        Task<T> GetEntityWithSpec(ASpecWithQueryOperations<T> spec);
     }
 }
