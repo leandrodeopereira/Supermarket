@@ -1,10 +1,10 @@
-namespace SuperMarketApi
+namespace SupermarketApi
 {
     using System.Diagnostics.CodeAnalysis;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using SuperMarketApi.Data.DependencyInjection;
+    using SupermarketApi.Data.DependencyInjection;
 
     [SuppressMessage("Performance", "CA1812: Avoid uninstantiated internal classes", Justification = "Instantiated through reflection")]
     internal sealed class Startup
