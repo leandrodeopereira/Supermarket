@@ -6,11 +6,13 @@
 
     public class ProductsWithTypesAndBrandsSpecification : ASpecWithQueryOperations<Product>
     {
-        public ProductsWithTypesAndBrandsSpecification(string? sort)
+        public ProductsWithTypesAndBrandsSpecification(string? sort, int? brandId, int? typeId)
         {
             this.AddInclude(x => x.ProductBrand);
             this.AddInclude(x => x.ProductType);
-            this.Expression = default!;
+            this.Expression = x =>
+                (!brandId.HasValue || x.ProductBrandId == brandId) &&
+                (!typeId.HasValue || x.ProductTypeId == typeId);
 
             switch (sort)
             {
