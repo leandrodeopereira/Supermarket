@@ -5,12 +5,12 @@
     using SupermarketApi.Entities;
     using SupermarketApi.Specifications;
 
-    internal static class ASpecWithIncludeEvaluator<TEntity>
+    internal static class ASpecWithQueryOperationsEvaluator<TEntity>
         where TEntity : BaseEntity
     {
         public static IQueryable<TEntity> GetQuery(
             IQueryable<TEntity> inputQuery,
-            ASpecWithInclude<TEntity> spec)
+            ASpecWithQueryOperations<TEntity> spec)
         {
             _ = inputQuery ?? throw new System.ArgumentNullException(nameof(inputQuery));
             _ = spec ?? throw new System.ArgumentNullException(nameof(spec));

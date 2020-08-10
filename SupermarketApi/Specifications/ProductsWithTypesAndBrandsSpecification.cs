@@ -4,7 +4,7 @@
     using System.Linq.Expressions;
     using SupermarketApi.Entities;
 
-    public class ProductsWithTypesAndBrandsSpecification : ASpecWithInclude<Product>
+    public class ProductsWithTypesAndBrandsSpecification : ASpecWithQueryOperations<Product>
     {
         public ProductsWithTypesAndBrandsSpecification()
         {
