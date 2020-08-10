@@ -1,4 +1,4 @@
-﻿namespace SuperMarketApi.Entities
+﻿namespace SupermarketApi.Entities
 {
     public sealed class Product
     {

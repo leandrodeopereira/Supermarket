@@ -1,7 +1,7 @@
-﻿namespace SuperMarketApi.Data
+﻿namespace SupermarketApi.Data
 {
     using Microsoft.EntityFrameworkCore;
-    using SuperMarketApi.Entities;
+    using SupermarketApi.Entities;
 
     public sealed class StoreContext : DbContext
     {
