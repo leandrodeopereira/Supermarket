@@ -61,9 +61,9 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult<ICollection<Product>>> GetProducts()
+        public async Task<ActionResult<ICollection<Product>>> GetProducts(string? sort)
         {
-            var spec = new ProductsWithTypesAndBrandsSpecification();
+            var spec = new ProductsWithTypesAndBrandsSpecification(sort);
 
             var products = await this.productRepository.GetAsync(spec).ConfigureAwait(false);
 
