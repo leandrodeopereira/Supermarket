@@ -1,5 +1,6 @@
 ﻿namespace SupermarketApi.Repositories
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,18 @@
         public BaseRepository(StoreContext storeContext)
         {
             this.storeContext = storeContext;
+        }
+
+        Task<int> IRepository<T>.CountAsync(ASpecWithQueryOperations<T> spec)
+        {
+            _ = spec ?? throw new ArgumentNullException(nameof(spec));
+
+            return CreateTask();
+
+            async Task<int> CreateTask()
+            {
+                return await this.storeContext.ApplySpecification(spec).CountAsync().ConfigureAwait(false);
+            }
         }
 
         async Task<IReadOnlyCollection<T>> IRepository<T>.GetAllAsync()

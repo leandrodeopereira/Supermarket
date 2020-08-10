@@ -8,6 +8,8 @@
     public interface IRepository<T>
         where T : BaseEntity
     {
+        Task<int> CountAsync(ASpecWithQueryOperations<T> spec);
+
         Task<IReadOnlyCollection<T>> GetAllAsync();
 
         Task<IReadOnlyCollection<T>> GetAsync(ASpecWithQueryOperations<T> spec);
