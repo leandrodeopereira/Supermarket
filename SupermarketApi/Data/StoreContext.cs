@@ -1,6 +1,7 @@
 ﻿namespace SupermarketApi.Data
 {
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using System.Reflection;
     using Microsoft.EntityFrameworkCore;
     using SupermarketApi.Entities;
@@ -25,6 +26,23 @@
 
             base.OnModelCreating(modelBuilder);
             _ = modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+            // Managing Sqlite limitation with decimal type
+            if (this.Database.ProviderName == "Microsoft.EntityFrameworkCore.Sqlite")
+            {
+                foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+                {
+                    var properties = entityType.ClrType.GetProperties().Where(p => p.PropertyType == typeof(decimal));
+
+                    foreach (var property in properties)
+                    {
+                        _ = modelBuilder
+                            .Entity(entityType.Name)
+                            .Property(property.Name)
+                            .HasConversion<double>();
+                    }
+                }
+            }
         }
     }
 }
