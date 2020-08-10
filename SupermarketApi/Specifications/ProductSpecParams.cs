@@ -1,9 +1,13 @@
 ﻿namespace SupermarketApi.Specifications
 {
+    using System.Diagnostics.CodeAnalysis;
+
+    [SuppressMessage("Globalization", "CA1304: Specify CultureInfo", Justification = "StringComparison is not supported by EF")]
     public sealed class ProductSpecParams
     {
         private const int MaxPageSize = 50;
         private int pageSize = 6;
+        private string? search;
 
         public int PageIndex { get; set; } = 1;
 
@@ -16,6 +20,12 @@
         public int? BrandId { get; set; }
 
         public int? TypeId { get; set; }
+
+        public string? Search
+        {
+            get => this.search;
+            set => this.search = value?.ToLower();
+        }
 
         public string? Sort { get; set; }
     }
