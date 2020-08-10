@@ -1,4 +1,4 @@
-﻿namespace SuperMarketApi.Data.DependencyInjection
+﻿namespace SupermarketApi.Data.DependencyInjection
 {
     using System;
     using Microsoft.EntityFrameworkCore;

@@ -1,4 +1,4 @@
-namespace SuperMarketApi
+namespace SupermarketApi
 {
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Hosting;

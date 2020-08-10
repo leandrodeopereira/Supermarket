@@ -1,4 +1,4 @@
-﻿namespace SuperMarketApi.Data.Migrations
+﻿namespace SupermarketApi.Data.Migrations
 {
     using System;
     using Microsoft.EntityFrameworkCore.Migrations;
