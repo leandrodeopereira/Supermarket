@@ -6,15 +6,18 @@
 
     public class ProductsWithTypesAndBrandsSpecification : ASpecWithQueryOperations<Product>
     {
-        public ProductsWithTypesAndBrandsSpecification(string? sort, int? brandId, int? typeId)
+        public ProductsWithTypesAndBrandsSpecification(ProductSpecParams productSpecParams)
         {
+            _ = productSpecParams ?? throw new ArgumentNullException(nameof(productSpecParams));
+
             this.AddInclude(x => x.ProductBrand);
             this.AddInclude(x => x.ProductType);
             this.Expression = x =>
-                (!brandId.HasValue || x.ProductBrandId == brandId) &&
-                (!typeId.HasValue || x.ProductTypeId == typeId);
+                (!productSpecParams.BrandId.HasValue || x.ProductBrandId == productSpecParams.BrandId) &&
+                (!productSpecParams.TypeId.HasValue || x.ProductTypeId == productSpecParams.TypeId);
+            this.ApplyPaging(productSpecParams.PageSize * (productSpecParams.PageIndex - 1), productSpecParams.PageSize);
 
-            switch (sort)
+            switch (productSpecParams.Sort)
             {
                 case "priceAsc":
                     this.OrderBy = p => p.Price;

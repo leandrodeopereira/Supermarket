@@ -11,6 +11,7 @@ namespace SupermarketApi.Controllers
     using SupermarketApi.Dtos;
     using SupermarketApi.Entities;
     using SupermarketApi.Errors;
+    using SupermarketApi.Helpers;
     using SupermarketApi.Mapping;
     using SupermarketApi.Repositories;
     using SupermarketApi.Specifications;
@@ -45,7 +46,7 @@ namespace SupermarketApi.Controllers
         }
 
         [TestMethod]
-        public async Task GettingProductsShouldReturnExpectedProducts()
+        public async Task GettingProductsShouldReturnExpectedPaginationOfProductsDto()
         {
             // Arrange
             var products = new List<Product>
@@ -54,11 +55,13 @@ namespace SupermarketApi.Controllers
                 new Product { Id = 2, Name = "Product 2" },
             };
 
-            var expectedProductsDto = new List<ProductDto>
+            var productDto = new List<ProductDto>
             {
                 new ProductDto { Id = 1, Name = "Product 1" },
                 new ProductDto { Id = 2, Name = "Product 2" },
             };
+
+            var expectedPaginationOfProductsDto = new Pagination<ProductDto>(1, 6, 0, productDto);
 
             var productRepository = Substitute.For<IRepository<Product>>();
             _ = productRepository
@@ -68,18 +71,18 @@ namespace SupermarketApi.Controllers
             var mapper = Substitute.For<IMapper>();
             _ = mapper
                 .Map<IReadOnlyCollection<Product>, IReadOnlyCollection<ProductDto>>(products)
-                .Returns(expectedProductsDto);
+                .Returns(productDto);
 
             var productController = CreateProductsController(
                 productRepository: productRepository,
                 mapper: mapper);
 
             // Act
-            var productsActionResult = await productController.GetProducts().ConfigureAwait(false);
+            var productsActionResult = await productController.GetProducts(new ProductSpecParams()).ConfigureAwait(false);
 
             // Assert
             productsActionResult.Result.Should().BeOfType<OkObjectResult>()
-                .Which.Value.Should().BeEquivalentTo(expectedProductsDto);
+                .Which.Value.Should().BeEquivalentTo(expectedPaginationOfProductsDto);
         }
 
         [TestMethod]

@@ -8,6 +8,7 @@
     using SupermarketApi.Dtos;
     using SupermarketApi.Entities;
     using SupermarketApi.Errors;
+    using SupermarketApi.Helpers;
     using SupermarketApi.Mapping;
     using SupermarketApi.Repositories;
     using SupermarketApi.Specifications;
@@ -61,13 +62,17 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult<ICollection<Product>>> GetProducts(string? sort, int? brandId, int? typeId)
+        public async Task<ActionResult<Pagination<Product>>> GetProducts([FromQuery] ProductSpecParams productSpecParams)
         {
-            var spec = new ProductsWithTypesAndBrandsSpecification(sort, brandId, typeId);
+            var contSpec = new ProductWithFiltersForCountSpecification(productSpecParams);
+            var totalItems = await this.productRepository.CountAsync(contSpec).ConfigureAwait(false);
 
+            var spec = new ProductsWithTypesAndBrandsSpecification(productSpecParams);
             var products = await this.productRepository.GetAsync(spec).ConfigureAwait(false);
 
-            return this.Ok(this.mapper.Map<IReadOnlyCollection<Product>, IReadOnlyCollection<ProductDto>>(products));
+            var data = this.mapper.Map<IReadOnlyCollection<Product>, IReadOnlyCollection<ProductDto>>(products);
+
+            return this.Ok(new Pagination<ProductDto>(productSpecParams.PageIndex, productSpecParams.PageSize, totalItems, data));
         }
 
         [HttpGet("types")]
