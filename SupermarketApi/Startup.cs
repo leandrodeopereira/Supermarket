@@ -30,6 +30,7 @@ namespace SupermarketApi
                 .UseHttpsRedirection()
                 .UseRouting()
                 .UseStaticFiles()
+                .UseClientCorsPolicy()
                 .UseSwaggerDocumentation()
                 .UseEndpoints(endpoints => endpoints.MapControllers());
         }
@@ -40,6 +41,7 @@ namespace SupermarketApi
                 .AddControllers().Services
                 .AddApplicationServices()
                 .AddAutoMapper(typeof(MappingProfiles))
+                .AddClientCorsPolicy(this.Configuration)
                 .AddDataInfrastruture(this.Configuration)
                 .AddMapping()
                 .AddSwaggerDocumentation();
