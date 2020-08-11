@@ -25,3 +25,18 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+
+## To install the certificate on Windows 10
+
+	1. Double click on the certificate (server.crt)
+	2. Click on the button “Install Certificate …”
+	3. Select whether you want to store it on user level or on machine level
+	4. Click “Next”
+	5. Select “Place all certificates in the following store”
+	6. Click “Browse”
+	7. Select “Trusted Root Certification Authorities”
+	8. Click “Ok”
+	9. Click “Next”
+	10. Click “Finish”
+
+If you get a prompt, click “Yes”
