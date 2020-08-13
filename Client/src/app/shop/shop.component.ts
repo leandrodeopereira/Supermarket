@@ -10,8 +10,10 @@ import { IProductType } from '../shared/models/productType';
   styleUrls: ['./shop.component.scss'],
 })
 export class ShopComponent implements OnInit {
+  brandIdSelected = 0;
   brands: IBrand[];
   products: IProduct[];
+  productTypeIdSelected = 0;
   productTypes: IProductType[];
 
   constructor(private shopService: ShopService) {}
@@ -25,14 +27,14 @@ export class ShopComponent implements OnInit {
   getBrands(): void{
     this.shopService.getBrands().subscribe(
       response => {
-      this.brands = response;
+      this.brands = [{id: 0, name: 'All'}, ...response];
     }, error => {
       console.log(error);
     });
   }
 
   getProducts(): void{
-    this.shopService.getProducts().subscribe(
+    this.shopService.getProducts(this.brandIdSelected, this.productTypeIdSelected).subscribe(
       response => {
       this.products = response.data;
     }, error => {
@@ -43,9 +45,19 @@ export class ShopComponent implements OnInit {
   getProductTypes(): void{
     this.shopService.getProductTypes().subscribe(
       response => {
-      this.productTypes = response;
+      this.productTypes = [{id: 0, name: 'All'}, ...response];
     }, error => {
       console.log(error);
     });
+  }
+
+  onBrandSelected(brandId: number): void {
+    this.brandIdSelected = brandId;
+    this.getProducts();
+  }
+
+  onProductTypeSelected(typeId: number): void {
+    this.productTypeIdSelected = typeId;
+    this.getProducts();
   }
 }
