@@ -20,6 +20,7 @@ export class ShopComponent implements OnInit {
     {name: 'Price: Low to High', value: 'priceAsc'},
     {name: 'Price: High to Low', value: 'priceDesc'},
   ];
+  totalCount: number;
 
   constructor(private shopService: ShopService) {}
 
@@ -42,6 +43,9 @@ export class ShopComponent implements OnInit {
     this.shopService.getProducts(this.shopParams).subscribe(
       response => {
       this.products = response.data;
+      this.shopParams.pageNumber = response.pageIndex;
+      this.shopParams.pageSize = response.pageSize;
+      this.totalCount = response.count;
     }, error => {
       console.log(error);
     });
@@ -58,11 +62,18 @@ export class ShopComponent implements OnInit {
 
   onBrandSelected(brandId: number): void {
     this.shopParams.brandId = brandId;
+    this.shopParams.pageNumber = 1;
+    this.getProducts();
+  }
+
+  onPageChanged(event: any): void {
+    this.shopParams.pageNumber = event.page;
     this.getProducts();
   }
 
   onProductTypeSelected(typeId: number): void {
     this.shopParams.typeId = typeId;
+    this.shopParams.pageNumber = 1;
     this.getProducts();
   }
 
