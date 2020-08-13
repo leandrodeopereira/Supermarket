@@ -5,6 +5,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
   templateUrl: './pager.component.html',
 })
 export class PagerComponent implements OnInit {
+  @Input() pageNumber: number;
   @Input() pageSize: number;
   @Input() totalCount: number;
   @Output() pageChanged = new EventEmitter<number>();
@@ -15,6 +16,9 @@ export class PagerComponent implements OnInit {
   }
 
   onPagerChange(event: any): void {
-    this.pageChanged.emit(event.page);
+    // Emit the event just when the page change
+    if (this.pageNumber !== event.page){
+      this.pageChanged.emit(event.page);
+    }
   }
 }
