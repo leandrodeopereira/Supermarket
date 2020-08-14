@@ -8,12 +8,13 @@ import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { ShopParams } from '../shared/models/shopParams';
 import { IProduct } from '../shared/models/product';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ShopService {
-  private baseUrl = 'https://localhost:44387/api/';
+  private baseUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
