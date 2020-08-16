@@ -5,7 +5,7 @@ import {
   HttpEvent,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, NavigationExtras } from '@angular/router';
 
 import { catchError } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
@@ -36,7 +36,8 @@ export class ErrorInterceptor implements HttpInterceptor {
           }
 
           if (error.status === 500) {
-            this.router.navigateByUrl('/server-error');
+            const navigationExtras: NavigationExtras = { state: { error: error.error } };
+            this.router.navigateByUrl('/server-error', navigationExtras);
           }
         }
 

@@ -1,3 +1,10 @@
 <div class="position-relative overflow-hidden text-center">
   <img src="/assets/images/500.png" />
 </div>
+<ng-container *ngIf="error">
+  <h6 class="text-center">Note: Refreshing the page will make the exception message disappear.</h6>
+  <h5 class="text-danger text-center">Error: {{ error.message }}</h5>
+  <code class="mt-4" style="background-color: whitesmoke; text-align: left;">
+    {{ error.details }}
+  </code>
+</ng-container>
