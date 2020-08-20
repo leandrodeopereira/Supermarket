@@ -10,7 +10,9 @@
         {
             _ = serviceCollection ?? throw new ArgumentNullException(nameof(serviceCollection));
 
-            return serviceCollection.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
+            return serviceCollection
+                .AddScoped(typeof(IRepository<>), typeof(BaseRepository<>))
+                .AddScoped<IBasketRepository, BasketRepository>();
         }
     }
 }

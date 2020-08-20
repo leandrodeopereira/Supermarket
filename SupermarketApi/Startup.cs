@@ -44,6 +44,7 @@ namespace SupermarketApi
                 .AddClientCorsPolicy(this.Configuration)
                 .AddDataInfrastruture(this.Configuration)
                 .AddMapping()
+                .AddRedisConfiguration(this.Configuration)
                 .AddSwaggerDocumentation();
         }
     }
