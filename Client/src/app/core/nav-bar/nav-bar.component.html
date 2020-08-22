@@ -8,13 +8,13 @@
     <a class="p-2" href="#">Contact</a>
   </nav>
   <div class="d-flex align-items-center">
-    <a class="position-relative">
+    <a class="position-relative" routerLink="/basket" >
       <fa-icon
         [icon]="faShoppingCart"
         size="2x"
         style="margin-right: 20px;"
       ></fa-icon>
-      <div class="cart-no">5</div>
+      <div *ngIf="(this.basket$ | async) as basket" class="cart-no">{{basket.items.length}}</div>
     </a>
     <a class="btn btn-outline-secondary mr-2" href="#">Login</a>
     <a class="btn btn-outline-secondary mr3" href="#">Sign up</a>
