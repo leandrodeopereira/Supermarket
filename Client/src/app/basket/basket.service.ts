@@ -28,6 +28,7 @@ export class BasketService {
     return this.http.get(this.baseUrl + 'basket?id=' + id).pipe(
       map((basket: IBasket) => {
         this.basketSource.next(basket);
+        this.calculateTotals();
       })
     );
   }
@@ -36,6 +37,7 @@ export class BasketService {
     return this.http.post(this.baseUrl + 'basket', basket).subscribe(
       (response: IBasket) => {
         this.basketSource.next(response);
+        this.calculateTotals();
       }, error => {
         console.log(error);
       }
@@ -57,6 +59,17 @@ export class BasketService {
     const basket = new Basket();
     localStorage.setItem('basket_id', basket.id);
     return basket;
+  }
+
+  private calculateTotals(): void {
+    const basket = this.getCurrentBasketValue();
+    const shipping = 0;
+    const subtotal = basket.items.reduce(
+      (currentValue, item) => item.price * item.quantity + currentValue,
+      0
+    );
+    const total = subtotal + shipping;
+    this.basketTotalSource.next({ shipping, subtotal, total });
   }
 
   private addOrUpdateItem(
