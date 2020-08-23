@@ -7,6 +7,7 @@ namespace SupermarketApi
     using Microsoft.Extensions.DependencyInjection;
     using SupermarketApi.Data.DependencyInjection;
     using SupermarketApi.Extensions;
+    using SupermarketApi.Identity.DependencyInjection;
     using SupermarketApi.Mapping.DependecyInjection;
     using SupermarketApi.Middleware;
     using SupermarketApi.Profiles;
@@ -43,6 +44,7 @@ namespace SupermarketApi
                 .AddAutoMapper(typeof(MappingProfiles))
                 .AddClientCorsPolicy(this.Configuration)
                 .AddDataInfrastruture(this.Configuration)
+                .AddIdentityInfrastruture(this.Configuration)
                 .AddMapping()
                 .AddRedisConfiguration(this.Configuration)
                 .AddSwaggerDocumentation();
