@@ -53,5 +53,27 @@
                     DisplayName = user.DisplayName,
                 });
         }
+
+        [HttpPost("register")]
+        public async Task<ActionResult<UserDto>> Register(RegisterDto register)
+        {
+            if (register is null)
+            {
+                return this.BadRequest(this.apiResponseBuilder.Build(HttpStatusCode.BadRequest));
+            }
+
+            var user = new AppUser
+            {
+                DisplayName = register.DisplayName,
+                Email = register.Email,
+                UserName = register.Email,
+            };
+
+            var result = await this.userManager.CreateAsync(user, register.Password).ConfigureAwait(false);
+
+            return !result.Succeeded
+                ? this.BadRequest(this.apiResponseBuilder.Build(HttpStatusCode.BadRequest))
+                : (ActionResult<UserDto>)this.Ok(new UserDto { DisplayName = user.DisplayName, Email = user.Email, Token = "This will be a token" });
+        }
     }
 }
