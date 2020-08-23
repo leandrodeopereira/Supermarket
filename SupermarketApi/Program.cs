@@ -4,11 +4,14 @@ namespace SupermarketApi
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
     using SupermarketApi.Data;
+    using SupermarketApi.Entities.Identity;
+    using SupermarketApi.Identity;
 
     [ExcludeFromCodeCoverage]
     public sealed class Program
@@ -28,6 +31,11 @@ namespace SupermarketApi
                     var contex = services.GetRequiredService<StoreContext>();
                     await contex.Database.MigrateAsync().ConfigureAwait(false);
                     await StoreContextSeed.SeedAsync(contex, loggerFactory).ConfigureAwait(false);
+
+                    var userManager = services.GetRequiredService<UserManager<AppUser>>();
+                    var identityContext = services.GetRequiredService<AppIdentityDbContext>();
+                    await identityContext.Database.MigrateAsync().ConfigureAwait(false);
+                    await AppIdentityDbContextSeed.SeedUsersAsync(userManager).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
