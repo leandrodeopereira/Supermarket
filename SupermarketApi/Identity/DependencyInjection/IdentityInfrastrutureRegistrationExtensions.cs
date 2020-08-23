@@ -2,10 +2,13 @@
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using System.Text;
+    using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.IdentityModel.Tokens;
     using SupermarketApi.Entities.Identity;
 
     [ExcludeFromCodeCoverage]
@@ -24,7 +27,19 @@
 
             return serviceCollection
                 .AddDbContext<AppIdentityDbContext>(x => x.UseSqlite(configuration.GetConnectionString("IdentityConnection")))
-                .AddAuthentication().Services;
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(options =>
+                    {
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Token:Key"])),
+                            ValidateAudience = false,
+                            ValidateIssuerSigningKey = true,
+                            ValidateIssuer = true,
+                            ValidIssuer = configuration["Token:Issuer"],
+                        };
+                    })
+                .Services;
         }
     }
 }

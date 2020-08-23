@@ -8,6 +8,7 @@
     using SupermarketApi.Entities.Identity;
     using SupermarketApi.Errors;
     using SupermarketApi.Mapping;
+    using SupermarketApi.Services;
 
     [ApiController]
     [Route("api/[controller]")]
@@ -16,15 +17,18 @@
         private readonly UserManager<AppUser> userManager;
         private readonly SignInManager<AppUser> signInManager;
         private readonly IBuilder<HttpStatusCode, ApiResponse> apiResponseBuilder;
+        private readonly ITokenService tokenService;
 
         public AccountController(
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
-            IBuilder<HttpStatusCode, ApiResponse> apiResponseBuilder)
+            IBuilder<HttpStatusCode, ApiResponse> apiResponseBuilder,
+            ITokenService tokenService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.apiResponseBuilder = apiResponseBuilder;
+            this.tokenService = tokenService;
         }
 
         [HttpPost("login")]
@@ -49,7 +53,7 @@
                 : (ActionResult<UserDto>)this.Ok(new UserDto
                 {
                     Email = user.Email,
-                    Token = "This will be a token",
+                    Token = this.tokenService.CreateToken(user),
                     DisplayName = user.DisplayName,
                 });
         }
@@ -73,7 +77,12 @@
 
             return !result.Succeeded
                 ? this.BadRequest(this.apiResponseBuilder.Build(HttpStatusCode.BadRequest))
-                : (ActionResult<UserDto>)this.Ok(new UserDto { DisplayName = user.DisplayName, Email = user.Email, Token = "This will be a token" });
+                : (ActionResult<UserDto>)this.Ok(new UserDto
+                {
+                    DisplayName = user.DisplayName,
+                    Email = user.Email,
+                    Token = this.tokenService.CreateToken(user),
+                });
         }
     }
 }

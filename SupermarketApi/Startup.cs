@@ -11,6 +11,7 @@ namespace SupermarketApi
     using SupermarketApi.Mapping.DependecyInjection;
     using SupermarketApi.Middleware;
     using SupermarketApi.Profiles;
+    using SupermarketApi.Services.DependencyInjection;
 
     [ExcludeFromCodeCoverage]
     [SuppressMessage("Performance", "CA1812: Avoid uninstantiated internal classes", Justification = "Instantiated through reflection")]
@@ -32,6 +33,8 @@ namespace SupermarketApi
                 .UseRouting()
                 .UseStaticFiles()
                 .UseClientCorsPolicy()
+                .UseAuthentication()
+                .UseAuthorization()
                 .UseSwaggerDocumentation()
                 .UseEndpoints(endpoints => endpoints.MapControllers());
         }
@@ -47,6 +50,7 @@ namespace SupermarketApi
                 .AddIdentityInfrastruture(this.Configuration)
                 .AddMapping()
                 .AddRedisConfiguration(this.Configuration)
+                .AddServices()
                 .AddSwaggerDocumentation();
         }
     }
