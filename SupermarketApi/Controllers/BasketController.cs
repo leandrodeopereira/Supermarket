@@ -2,7 +2,9 @@
 {
     using System.Net;
     using System.Threading.Tasks;
+    using AutoMapper;
     using Microsoft.AspNetCore.Mvc;
+    using SupermarketApi.Dtos;
     using SupermarketApi.Entities;
     using SupermarketApi.Errors;
     using SupermarketApi.Mapping;
@@ -14,11 +16,16 @@
     {
         private readonly IBasketRepository basketRepository;
         private readonly IBuilder<HttpStatusCode, ApiResponse> apiResponseBuilder;
+        private readonly IMapper mapper;
 
-        public BasketController(IBasketRepository basketRepository, IBuilder<HttpStatusCode, ApiResponse> apiResponseBuilder)
+        public BasketController(
+            IBasketRepository basketRepository,
+            IBuilder<HttpStatusCode, ApiResponse> apiResponseBuilder,
+            IMapper mapper)
         {
             this.basketRepository = basketRepository;
             this.apiResponseBuilder = apiResponseBuilder;
+            this.mapper = mapper;
         }
 
         [HttpDelete]
@@ -38,9 +45,11 @@
         }
 
         [HttpPost]
-        public async Task<ActionResult<CustomerBasket>> UpdateBasket(CustomerBasket basket)
+        public async Task<ActionResult<CustomerBasket>> UpdateBasket(CustomerBasketDto basket)
         {
-            var updated = await this.basketRepository.SetBasketAsync(basket).ConfigureAwait(false);
+            var updated = await this.basketRepository
+                .SetBasketAsync(this.mapper.Map<CustomerBasket>(basket))
+                .ConfigureAwait(false);
 
             return updated switch
             {

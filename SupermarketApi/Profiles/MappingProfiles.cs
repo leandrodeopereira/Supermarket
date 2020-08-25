@@ -16,6 +16,10 @@
 
             _ = this.CreateMap<Address, AddressDto>()
                 .ReverseMap();
+
+            _ = this.CreateMap<CustomerBasketDto, CustomerBasket>();
+
+            _ = this.CreateMap<BasketItemDto, BasketItem>();
         }
     }
 }
