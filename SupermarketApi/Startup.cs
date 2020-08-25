@@ -2,11 +2,11 @@ namespace SupermarketApi
 {
     using System.Diagnostics.CodeAnalysis;
     using AutoMapper;
-    using FluentValidation.AspNetCore;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using SupermarketApi.Data.DependencyInjection;
+    using SupermarketApi.Dtos.Validators.DependencyInjection;
     using SupermarketApi.Extensions;
     using SupermarketApi.Identity.DependencyInjection;
     using SupermarketApi.Mapping.DependecyInjection;
@@ -48,7 +48,7 @@ namespace SupermarketApi
                 .AddAutoMapper(typeof(MappingProfiles))
                 .AddClientCorsPolicy(this.Configuration)
                 .AddDataInfrastruture(this.Configuration)
-                .AddMvcCore().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>()).Services
+                .AddMvcCore().AddValidators().Services
                 .AddIdentityInfrastruture(this.Configuration)
                 .AddMapping()
                 .AddRedisConfiguration(this.Configuration)
