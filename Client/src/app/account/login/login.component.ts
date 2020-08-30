@@ -7,7 +7,6 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
@@ -20,7 +19,8 @@ export class LoginComponent implements OnInit {
 
   createLoginForm(): void {
     this.loginForm = new FormGroup({
-      email: new FormControl('', Validators.required),
+      email: new FormControl('', [Validators.required, Validators
+        .pattern('^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$')]),
       password: new FormControl('', Validators.required),
     });
   }
@@ -35,6 +35,5 @@ export class LoginComponent implements OnInit {
         console.log(error);
       }
     );
-    console.log(this.loginForm.value);
   }
 }
