@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { PagingHeaderComponent } from './components/paging-header/paging-header.component';
@@ -16,11 +17,13 @@ import { ReactiveFormsModule } from '@angular/forms';
   ],
   imports: [
     CommonModule,
+    BsDropdownModule.forRoot(),
     PaginationModule.forRoot(),
     CarouselModule.forRoot(),
     ReactiveFormsModule,
   ],
   exports: [
+    BsDropdownModule,
     CarouselModule,
     OrderTotalsComponent,
     PagingHeaderComponent,
