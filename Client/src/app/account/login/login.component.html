@@ -1,0 +1,35 @@
+<div class="d-flex justify-content-center mt-5">
+  <div class="col-3">
+    <form [formGroup]="this.loginForm" (ngSubmit)="onSubmit()">
+      <div class="text-center mb-4">
+        <img class="mb-2" src="assets/images/logo2.png" alt="" />
+      </div>
+
+      <div class="form-label-group">
+        <input
+          formControlName="email"
+          type="email"
+          id="inputEmail"
+          class="form-control"
+          placeholder="Email address"
+        />
+        <label for="inputEmail">Email address</label>
+      </div>
+
+      <div class="form-label-group">
+        <input
+          formControlName="password"
+          type="password"
+          id="inputPassword"
+          class="form-control"
+          placeholder="Password"
+        />
+        <label for="inputPassword">Password</label>
+      </div>
+
+      <button class="btn btn-lg btn-primary btn-block" type="submit">
+        Sign in
+      </button>
+    </form>
+  </div>
+</div>
