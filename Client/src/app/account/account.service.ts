@@ -46,6 +46,17 @@ export class AccountService {
     );
   }
 
+  register(values: any): Observable<void> {
+    return this.http.post(this.baseUrl + 'account/register', values).pipe(
+      map((user: IUser) => {
+        if (user) {
+          localStorage.setItem('token', user.token);
+          this.currentUserSource.next(user);
+        }
+      })
+    );
+  }
+
   logout(): void {
     localStorage.removeItem('token');
     this.currentUserSource.next(null);
