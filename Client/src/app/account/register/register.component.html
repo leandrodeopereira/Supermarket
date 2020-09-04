@@ -18,6 +18,12 @@
           [label]="'Password'"
           [type]="'password'"
         ></app-text-input>
+
+        <ul class="text-danger" *ngIf="errors">
+          <li *ngFor="let error of errors">
+            {{error}}
+          </li>
+        </ul>
   
         <button
           [disabled]="this.registerForm.invalid"

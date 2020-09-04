@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 })
 export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
+  errors: string[];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -41,6 +42,7 @@ export class RegisterComponent implements OnInit {
       },
       (error) => {
         console.log(error);
+        this.errors = error.errors;
       }
     );
   }
