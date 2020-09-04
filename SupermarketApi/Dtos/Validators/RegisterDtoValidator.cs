@@ -8,6 +8,7 @@
     {
         public RegisterDtoValidator(UserManager<AppUser> userManager)
         {
+            _ = this.RuleFor(a => a.DisplayName).NotEmpty();
             _ = this.RuleFor(a => a.Email).EmailAddress().DuplicateEmail(userManager);
             _ = this.RuleFor(a => a.Password).StrongPassword();
         }
