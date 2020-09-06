@@ -62,4 +62,8 @@ export class AccountService {
     this.currentUserSource.next(null);
     this.router.navigateByUrl('/');
   }
+
+  checkEmailExists(email: string): Observable<object> {
+    return this.http.get(this.baseUrl + 'account/emailexists?email=' + email);
+  }
 }

@@ -32,4 +32,26 @@
       >Invalid email address</span
     >
   </div>
+
+  <div
+    class="fa fa-spinner fa-spin loader"
+    *ngIf="
+      controlDir &&
+      controlDir.control &&
+      controlDir.control.status === 'PENDING'
+    "
+  ></div>
+  <div
+    class="invalid-feedback d-block"
+    *ngIf="
+      controlDir &&
+      controlDir.control &&
+      !controlDir.control.valid &&
+      controlDir.control.touched
+    "
+  >
+    <span *ngIf="controlDir.control.errors?.emailExists"
+      >Email address is in use</span
+    >
+  </div>
 </div>
