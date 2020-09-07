@@ -7,6 +7,7 @@
     using SupermarketApi.Data;
     using SupermarketApi.Entities;
     using SupermarketApi.Specifications;
+    using static Microsoft.EntityFrameworkCore.EntityState;
 
     internal class BaseRepository<T> : IRepository<T>
         where T : BaseEntity
@@ -16,6 +17,11 @@
         public BaseRepository(StoreContext storeContext)
         {
             this.storeContext = storeContext;
+        }
+
+        void IRepository<T>.Add(T entity)
+        {
+            _ = this.storeContext.Set<T>().Add(entity);
         }
 
         Task<int> IRepository<T>.CountAsync(ASpecWithQueryOperations<T> spec)
@@ -28,6 +34,11 @@
             {
                 return await this.storeContext.ApplySpecification(spec).CountAsync().ConfigureAwait(false);
             }
+        }
+
+        void IRepository<T>.Delete(T entity)
+        {
+            _ = this.storeContext.Set<T>().Remove(entity);
         }
 
         async Task<IReadOnlyCollection<T>> IRepository<T>.GetAllAsync()
@@ -52,6 +63,12 @@
         async Task<T> IRepository<T>.GetEntityWithSpec(ASpecWithQueryOperations<T> spec)
         {
             return await this.storeContext.ApplySpecification(spec).FirstOrDefaultAsync().ConfigureAwait(false);
+        }
+
+        void IRepository<T>.Update(T entity)
+        {
+            _ = this.storeContext.Set<T>().Attach(entity);
+            _ = this.storeContext.Entry(entity).State = Modified;
         }
     }
 }
