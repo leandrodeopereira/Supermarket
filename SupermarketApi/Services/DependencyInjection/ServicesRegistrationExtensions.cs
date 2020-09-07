@@ -12,6 +12,7 @@
             _ = serviceCollection ?? throw new ArgumentNullException(nameof(serviceCollection));
 
             return serviceCollection
+                .AddScoped<IOrderService, OrderService>()
                 .AddScoped<ITokenService, TokenService>()
                 .AddScoped<IUnitOfWork, UnitOfWork>();
         }

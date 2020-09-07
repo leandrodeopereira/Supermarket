@@ -4,6 +4,7 @@
     using SupermarketApi.Dtos;
     using SupermarketApi.Entities;
     using SupermarketApi.Entities.Identity;
+    using OrderAdress = Entities.OrderAggregate.Address;
 
     public class MappingProfiles : Profile
     {
@@ -16,6 +17,8 @@
 
             _ = this.CreateMap<Address, AddressDto>()
                 .ReverseMap();
+
+            _ = this.CreateMap<AddressDto, OrderAdress>();
 
             _ = this.CreateMap<CustomerBasketDto, CustomerBasket>();
 
