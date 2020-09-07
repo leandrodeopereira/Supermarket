@@ -10,6 +10,7 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;
     using SupermarketApi.Entities;
+    using SupermarketApi.Entities.OrderAggregate;
 
     [ExcludeFromCodeCoverage]
     public sealed class StoreContextSeed
@@ -57,6 +58,20 @@
                     foreach (var item in products)
                     {
                         _ = storeContext.Products.Add(item);
+                    }
+
+                    _ = await storeContext.SaveChangesAsync().ConfigureAwait(false);
+                }
+
+                if (!storeContext.DeliveryMethods.Any())
+                {
+                    var dmData = File.ReadAllText("Data/SeedData/delivery.json");
+
+                    var methods = JsonSerializer.Deserialize<ICollection<DeliveryMethod>>(dmData);
+
+                    foreach (var method in methods)
+                    {
+                        _ = storeContext.DeliveryMethods.Add(method);
                     }
 
                     _ = await storeContext.SaveChangesAsync().ConfigureAwait(false);

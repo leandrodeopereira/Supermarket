@@ -5,6 +5,7 @@
     using System.Reflection;
     using Microsoft.EntityFrameworkCore;
     using SupermarketApi.Entities;
+    using SupermarketApi.Entities.OrderAggregate;
 
     [ExcludeFromCodeCoverage]
     public sealed class StoreContext : DbContext
@@ -13,6 +14,12 @@
             : base(options)
         {
         }
+
+        public DbSet<DeliveryMethod> DeliveryMethods => this.Set<DeliveryMethod>();
+
+        public DbSet<Order> Orders => this.Set<Order>();
+
+        public DbSet<OrderItem> OrdersItems => this.Set<OrderItem>();
 
         public DbSet<Product> Products => this.Set<Product>();
 
