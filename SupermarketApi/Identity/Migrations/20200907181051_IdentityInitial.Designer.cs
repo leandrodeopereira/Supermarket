@@ -9,7 +9,7 @@ using SupermarketApi.Identity;
 namespace SupermarketApi.Identity.Migrations
 {
     [DbContext(typeof(AppIdentityDbContext))]
-    [Migration("20200823020513_IdentityInitial")]
+    [Migration("20200907181051_IdentityInitial")]
     partial class IdentityInitial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -156,6 +156,9 @@ namespace SupermarketApi.Identity.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("City")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Country")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("FirstName")
