@@ -11,7 +11,9 @@
         {
             _ = serviceCollection ?? throw new ArgumentNullException(nameof(serviceCollection));
 
-            return serviceCollection.AddScoped<ITokenService, TokenService>();
+            return serviceCollection
+                .AddScoped<ITokenService, TokenService>()
+                .AddScoped<IUnitOfWork, UnitOfWork>();
         }
     }
 }
