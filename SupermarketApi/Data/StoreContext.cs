@@ -1,9 +1,11 @@
 ﻿namespace SupermarketApi.Data
 {
+    using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Reflection;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
     using SupermarketApi.Entities;
     using SupermarketApi.Entities.OrderAggregate;
 
@@ -29,7 +31,7 @@
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            _ = modelBuilder ?? throw new System.ArgumentNullException(nameof(modelBuilder));
+            _ = modelBuilder ?? throw new ArgumentNullException(nameof(modelBuilder));
 
             base.OnModelCreating(modelBuilder);
             _ = modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
@@ -47,6 +49,16 @@
                             .Entity(entityType.Name)
                             .Property(property.Name)
                             .HasConversion<double>();
+                    }
+
+                    var dateTimeProperties = entityType.ClrType.GetProperties().Where(p => p.PropertyType == typeof(DateTimeOffset));
+
+                    foreach (var dateTimePropertie in dateTimeProperties)
+                    {
+                        _ = modelBuilder
+                            .Entity(entityType.Name)
+                            .Property(dateTimePropertie.Name)
+                            .HasConversion(new DateTimeOffsetToBinaryConverter());
                     }
                 }
             }
