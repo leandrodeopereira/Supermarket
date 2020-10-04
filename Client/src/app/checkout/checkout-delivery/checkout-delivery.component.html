@@ -1,0 +1,36 @@
+<div class="mt-4" [formGroup]="this.checkoutForm">
+  <div class="row ml-3" formGroupName="deliveryForm">
+    <div class="col-6 form-group" *ngFor="let method of this.deliveryMethods">
+      <input
+        type="radio"
+        id="{{ method.id }}"
+        value="{{ method.id }}"
+        formControlName="deliveryMethod"
+        class="custom-control-input"
+        (click)="setShippingPrice(method)"
+      />
+      <label for="{{ method.id }}" class="custom-control-label">
+        <strong>{{ method.shortName }} - {{ method.price | currency }}</strong>
+        <br />
+        <span class="label-description">{{ method.deliveryTime }}</span>
+        <br />
+        <span class="label-description">{{ method.description }}</span>
+      </label>
+    </div>
+  </div>
+</div>
+
+<div
+  class="float-none d-flex justify-content-between flex-column flex-lg-row mb-5"
+>
+  <button class="btn btn-outline-primary" cdkStepperPrevious>
+    <i class="fa fa-angle-left"></i> Back to Address
+  </button>
+  <button
+    class="btn btn-primary"
+    [disabled]="this.checkoutForm.get('deliveryForm').invalid"
+    cdkStepperNext
+  >
+    Go to Review <i class="fa fa-angle-right"></i>
+  </button>
+</div>
