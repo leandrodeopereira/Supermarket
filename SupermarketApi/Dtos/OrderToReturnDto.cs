@@ -13,7 +13,7 @@ namespace SupermarketApi.Dtos
 
         public string DeliveryMethod { get; set; }
 
-        public DateTimeOffset OrderDate { get; set; } = DateTimeOffset.Now;
+        public DateTimeOffset OrderDate { get; set; }
 
         public IReadOnlyList<OrderItemDto> OrderItems { get; set; }
 
