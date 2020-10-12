@@ -17,7 +17,7 @@ namespace SupermarketApi.Dtos
 
         public IReadOnlyList<OrderItemDto> OrderItems { get; set; }
 
-        public OrderStatus Status { get; set; }
+        public string Status { get; set; }
 
         public decimal ShippingPrice { get; set; }
 
