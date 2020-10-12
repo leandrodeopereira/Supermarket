@@ -48,6 +48,12 @@ const routes: Routes = [
     data: { breadcrumb: { skip: true } },
   },
   {
+    path: 'orders',
+    loadChildren: () =>
+      import('./orders/orders.module').then((mod) => mod.OrdersModule),
+    data: { breadcrumb: { skip: true } },
+  },
+  {
     path: '**',
     redirectTo: '',
     pathMatch: 'full',
