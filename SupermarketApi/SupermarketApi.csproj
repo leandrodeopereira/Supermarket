@@ -25,6 +25,7 @@
     <PackageReference Include="NSpecifications" Version="1.1.0" />
     <PackageReference Include="Scrutor" Version="3.2.1" />
     <PackageReference Include="StackExchange.Redis" Version="2.1.58" />
+    <PackageReference Include="Stripe.net" Version="39.30.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.5.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUi" Version="5.5.1" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.7.1" />
