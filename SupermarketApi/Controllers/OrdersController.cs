@@ -4,12 +4,14 @@
     using System.Net;
     using System.Threading.Tasks;
     using AutoMapper;
+    using MediatR;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using SupermarketApi.Dtos;
     using SupermarketApi.Entities.OrderAggregate;
     using SupermarketApi.Errors;
     using SupermarketApi.Extensions;
+    using SupermarketApi.RequestHandlers;
     using SupermarketApi.Services;
 
     [ApiController]
@@ -19,11 +21,13 @@
     {
         private readonly IOrderService orderService;
         private readonly IMapper mapper;
+        private readonly IMediator mediator;
 
-        public OrdersController(IOrderService orderService, IMapper mapper)
+        public OrdersController(IOrderService orderService, IMapper mapper, IMediator mediator)
         {
             this.orderService = orderService;
             this.mapper = mapper;
+            this.mediator = mediator;
         }
 
         [HttpPost]
@@ -38,7 +42,9 @@
 
             var address = this.mapper.Map<AddressDto, Address>(orderDto.ShipToAddress);
 
-            var order = await this.orderService.CreateOrderAsync(email, orderDto.DeliveryMethodId, orderDto.BasketId, address).ConfigureAwait(false);
+            var command = new CreateOrderRequest(orderDto.BasketId, email, orderDto.DeliveryMethodId, address);
+
+            var order = await this.mediator.Send(command).ConfigureAwait(false);
 
             return order is null
                 ? this.BadRequest(new ApiResponse(HttpStatusCode.BadRequest, "Problem creating order"))

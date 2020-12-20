@@ -2,6 +2,7 @@ namespace SupermarketApi
 {
     using System.Diagnostics.CodeAnalysis;
     using AutoMapper;
+    using MediatR;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -51,6 +52,7 @@ namespace SupermarketApi
                 .AddMvcCore().AddValidators().Services
                 .AddIdentityInfrastruture(this.Configuration)
                 .AddMapping()
+                .AddMediatR(typeof(Startup))
                 .AddRedisConfiguration(this.Configuration)
                 .AddServices()
                 .AddSwaggerDocumentation();
