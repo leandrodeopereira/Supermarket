@@ -32,8 +32,13 @@
 
             var basket = await this.basketRepository.GetBasketAsync(request.BasketId).ConfigureAwait(false);
 
+            if (basket is null)
+            {
+                return default;
+            }
+
             var items = new List<OrderItem>();
-            foreach (var item in basket!.Items)
+            foreach (var item in basket.Items)
             {
                 var productItem = await this.unitOfWork.Repository<Product>().GetByIdAsync(item.Id).ConfigureAwait(false);
                 var itemOrdered = new ProductItemOrdered(productItem.Id, productItem.Name, productItem.PicturePath);
