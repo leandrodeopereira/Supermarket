@@ -4,7 +4,7 @@
     using MediatR;
     using SupermarketApi.Entities.OrderAggregate;
 
-    public class CreateOrderRequest : IRequest<Order>
+    public class CreateOrderRequest : IRequest<CreateOrderResponse>
     {
         public CreateOrderRequest(
             string basketId,

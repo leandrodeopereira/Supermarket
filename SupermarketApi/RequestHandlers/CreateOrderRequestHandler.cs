@@ -10,8 +10,9 @@
     using SupermarketApi.Entities.OrderAggregate;
     using SupermarketApi.Repositories;
     using SupermarketApi.Services;
+    using static SupermarketApi.RequestHandlers.CreateOrderResponse;
 
-    public class CreateOrderRequestHandler : IRequestHandler<CreateOrderRequest, Order?>
+    public class CreateOrderRequestHandler : IRequestHandler<CreateOrderRequest, CreateOrderResponse>
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IBasketRepository basketRepository;
@@ -24,7 +25,7 @@
             this.basketRepository = basketRepository;
         }
 
-        async Task<Order?> IRequestHandler<CreateOrderRequest, Order?>.Handle(
+        async Task<CreateOrderResponse> IRequestHandler<CreateOrderRequest, CreateOrderResponse>.Handle(
             CreateOrderRequest request,
             CancellationToken cancellationToken)
         {
@@ -34,7 +35,7 @@
 
             if (basket is null)
             {
-                return default;
+                return new BasketNotFound();
             }
 
             var items = new List<OrderItem>();
@@ -58,12 +59,12 @@
 
             if (result <= 0)
             {
-                return default;
+                return new ErrorCreatingOrder();
             }
 
             _ = await this.basketRepository.DeleteBasketAsync(request.BasketId).ConfigureAwait(false);
 
-            return order;
+            return new OrderCreated(order);
         }
     }
 }

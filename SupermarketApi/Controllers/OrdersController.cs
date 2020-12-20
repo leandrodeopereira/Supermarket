@@ -44,11 +44,13 @@
 
             var command = new CreateOrderRequest(orderDto.BasketId, email, orderDto.DeliveryMethodId, address);
 
-            var order = await this.mediator.Send(command).ConfigureAwait(false);
+            var createOrderResult = await this.mediator.Send(command).ConfigureAwait(false);
 
-            return order is null
-                ? this.BadRequest(new ApiResponse(HttpStatusCode.BadRequest, "Problem creating order"))
-                : (ActionResult<Order>)this.Ok(order);
+            return createOrderResult.Match(
+                orderCreated => (ActionResult<Order>)this.Ok(orderCreated.Order),
+                basketNotFound => this.NotFound(),
+                errorCreatingOrder => this.BadRequest(new ApiResponse(HttpStatusCode.BadRequest, "Problem creating order"))
+                );
         }
 
         [HttpGet("deliveryMethods")]
