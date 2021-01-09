@@ -23,5 +23,7 @@ namespace SupermarketApi.Entities
         public IReadOnlyCollection<BasketItem> Items { get; set; } = new List<BasketItem>();
 
         public string PaymentIntentId { get; set; }
+
+        public decimal ShippingPrice { get; set; }
     }
 }

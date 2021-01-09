@@ -16,5 +16,7 @@ namespace SupermarketApi.Dtos
         public IReadOnlyCollection<BasketItemDto> Items { get; set; }
 
         public string PaymentIntentId { get; set; }
+
+        public decimal ShippingPrice { get; set; }
     }
 }
