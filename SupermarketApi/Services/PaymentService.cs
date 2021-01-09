@@ -38,9 +38,9 @@
                 return default;
             }
 
-            if (basket.DeliveryMehodId.HasValue)
+            if (basket.DeliveryMethodId.HasValue)
             {
-                var deliveryMethod = await this.unitOfWork.Repository<DeliveryMethod>().GetByIdAsync((int)basket.DeliveryMehodId);
+                var deliveryMethod = await this.unitOfWork.Repository<DeliveryMethod>().GetByIdAsync((int)basket.DeliveryMethodId);
                 shippingPrice = deliveryMethod.Price;
             }
 

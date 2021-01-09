@@ -8,7 +8,7 @@ namespace SupermarketApi.Dtos
     {
         public string ClientSecret { get; set; }
 
-        public int? DeliveryMehodId { get; set; }
+        public int? DeliveryMethodId { get; set; }
 
         public string Id { get; set; }
 

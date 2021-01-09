@@ -26,8 +26,8 @@ export class BasketService {
 
   constructor(private http: HttpClient) {}
 
-  setShippingPrice(deliveryMehod: IDeliveryMethod): void {
-    this.shipping = deliveryMehod.price;
+  setShippingPrice(deliveryMethod: IDeliveryMethod): void {
+    this.shipping = deliveryMethod.price;
     this.calculateTotals();
   }
 
