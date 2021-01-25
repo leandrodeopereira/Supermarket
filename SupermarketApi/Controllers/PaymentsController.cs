@@ -6,7 +6,6 @@
     using Microsoft.AspNetCore.Mvc;
     using SupermarketApi.Entities;
     using SupermarketApi.Errors;
-    using SupermarketApi.Mapping;
     using SupermarketApi.Services;
 
     [ApiController]
@@ -14,12 +13,10 @@
     public class PaymentsController : ControllerBase
     {
         private readonly IPaymentService paymentService;
-        private readonly IBuilder<HttpStatusCode, ApiResponse> apiResponseBuilder;
 
-        public PaymentsController(IPaymentService paymentService, IBuilder<HttpStatusCode, ApiResponse> apiResponseBuilder)
+        public PaymentsController(IPaymentService paymentService)
         {
             this.paymentService = paymentService;
-            this.apiResponseBuilder = apiResponseBuilder;
         }
 
         [Authorize]
@@ -36,7 +33,7 @@
             return updatedBasket switch
             {
                 { } => this.Ok(updatedBasket),
-                _ => this.NotFound(this.apiResponseBuilder.Build(HttpStatusCode.NotFound)),
+                _ => this.BadRequest(new ApiResponse(HttpStatusCode.BadRequest, "Problem with your basket.")),
             };
         }
     }
