@@ -70,14 +70,7 @@
 
             var result = await this.unitOfWork.Complete();
 
-            if (result <= 0)
-            {
-                return new ErrorCreatingOrder();
-            }
-
-            _ = await this.basketRepository.DeleteBasketAsync(request.BasketId).ConfigureAwait(false);
-
-            return new OrderCreated(order);
+            return result <= 0 ? new ErrorCreatingOrder() : (CreateOrderResponse)new OrderCreated(order);
         }
     }
 }
