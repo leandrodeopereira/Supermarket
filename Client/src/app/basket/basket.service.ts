@@ -26,6 +26,16 @@ export class BasketService {
 
   constructor(private http: HttpClient) {}
 
+  createPaymentIntent(): Observable<void> {
+    return this.http.post(this.baseUrl + 'payments/' + this.getCurrentBasketValue().id, {})
+      .pipe(
+        map((basket: IBasket) => {
+          this.basketSource.next(basket);
+          console.log(this.getCurrentBasketValue());
+        })
+      );
+  }
+
   setShippingPrice(deliveryMethod: IDeliveryMethod): void {
     this.shipping = deliveryMethod.price;
     const basket = this.getCurrentBasketValue();
