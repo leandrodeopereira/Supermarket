@@ -14,6 +14,7 @@ namespace SupermarketApi.Entities.OrderAggregate
         public Order(
             IReadOnlyList<OrderItem> orderItems,
             string buyerEmail,
+            string paymentIntentId,
             Address shipToAddress,
             DeliveryMethod deliveryMethod,
             decimal subtotal)
@@ -21,6 +22,7 @@ namespace SupermarketApi.Entities.OrderAggregate
             this.OrderItems = orderItems;
             this.BuyerEmail = buyerEmail;
             this.DeliveryMethod = deliveryMethod;
+            this.PaymentIntentId = paymentIntentId;
             this.ShipToAddress = shipToAddress;
             this.Subtotal = subtotal;
         }

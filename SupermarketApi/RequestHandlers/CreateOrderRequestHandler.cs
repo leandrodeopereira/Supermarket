@@ -10,19 +10,23 @@
     using SupermarketApi.Entities.OrderAggregate;
     using SupermarketApi.Repositories;
     using SupermarketApi.Services;
+    using SupermarketApi.Specifications;
     using static SupermarketApi.RequestHandlers.CreateOrderResponse;
 
     public class CreateOrderRequestHandler : IRequestHandler<CreateOrderRequest, CreateOrderResponse>
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IBasketRepository basketRepository;
+        private readonly IPaymentService paymentService;
 
         public CreateOrderRequestHandler(
             IUnitOfWork unitOfWork,
-            IBasketRepository basketRepository)
+            IBasketRepository basketRepository,
+            IPaymentService paymentService)
         {
             this.unitOfWork = unitOfWork;
             this.basketRepository = basketRepository;
+            this.paymentService = paymentService;
         }
 
         async Task<CreateOrderResponse> IRequestHandler<CreateOrderRequest, CreateOrderResponse>.Handle(
@@ -51,7 +55,16 @@
 
             var subtotal = items.Sum(item => item.Price * item.Quantity);
 
-            var order = new Order(items, request.BuyerEmail, request.ShippingAddress, deliveryMethod, subtotal);
+            var spec = new OrderByPaymentIntentIdWithItemsSpecification(basket.PaymentIntentId);
+            var existingOrder = await this.unitOfWork.Repository<Order>().GetEntityWithSpec(spec);
+
+            if (existingOrder is Order)
+            {
+                this.unitOfWork.Repository<Order>().Delete(existingOrder);
+                _ = await this.paymentService.CreateOrUpdatePaymentIntent(basket.PaymentIntentId);
+            }
+
+            var order = new Order(items, request.BuyerEmail, basket.PaymentIntentId, request.ShippingAddress, deliveryMethod, subtotal);
 
             this.unitOfWork.Repository<Order>().Add(order);
 
