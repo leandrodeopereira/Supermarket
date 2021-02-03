@@ -33,6 +33,9 @@ export class CheckoutPaymentComponent implements AfterViewInit, OnDestroy {
   cardErrors: any;
   cardHandler = this.ngOnChange.bind(this);
   loading = false;
+  cardNumberValid = false;
+  cardExpiryValid = false;
+  cardCvcValid = false;
 
   constructor(
     private basketService: BasketService,
@@ -66,11 +69,25 @@ export class CheckoutPaymentComponent implements AfterViewInit, OnDestroy {
     this.cardCvc.destroy();
   }
 
-  ngOnChange({ error }): void {
-    if (error) {
-      this.cardErrors = error.message;
+  ngOnChange(event): void {
+    if (event.error) {
+      this.cardErrors = event.error.message;
     } else {
       this.cardErrors = null;
+    }
+    
+    switch (event.elementType) {
+      case 'cardNumber':
+        this.cardNumberValid = event.complete;
+        break;
+
+      case 'cardExpiry':
+        this.cardExpiryValid = event.complete;
+        break;
+
+      case 'cardCvc':
+        this.cardCvcValid = event.complete;
+        break;
     }
   }
 
