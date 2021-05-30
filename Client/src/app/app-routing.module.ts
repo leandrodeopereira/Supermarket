@@ -51,7 +51,7 @@ const routes: Routes = [
     path: 'orders',
     loadChildren: () =>
       import('./orders/orders.module').then((mod) => mod.OrdersModule),
-    data: { breadcrumb: { skip: true } },
+    data: { breadcrumb: 'Orders' },
   },
   {
     path: '**',
