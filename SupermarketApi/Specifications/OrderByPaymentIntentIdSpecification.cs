@@ -4,9 +4,9 @@
     using System.Linq.Expressions;
     using SupermarketApi.Entities.OrderAggregate;
 
-    public class OrderByPaymentIntentIdWithItemsSpecification : ASpecWithQueryOperations<Order>
+    public class OrderByPaymentIntentIdSpecification : ASpecWithQueryOperations<Order>
     {
-        public OrderByPaymentIntentIdWithItemsSpecification(string paymentIntentId)
+        public OrderByPaymentIntentIdSpecification(string paymentIntentId)
         {
             this.Expression = o => o.PaymentIntentId == paymentIntentId;
         }
