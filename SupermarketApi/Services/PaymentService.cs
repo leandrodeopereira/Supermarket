@@ -9,7 +9,9 @@
     using SupermarketApi.Entities;
     using SupermarketApi.Entities.OrderAggregate;
     using SupermarketApi.Repositories;
+    using SupermarketApi.Specifications;
     using Product = Entities.Product;
+    using Order = Entities.OrderAggregate.Order;
 
     public class PaymentService : IPaymentService
     {
@@ -89,6 +91,26 @@
             _ = await this.basketRepository.SetBasketAsync(basket);
 
             return basket;
+        }
+
+        async Task<Order?> IPaymentService.UpdateOrderPaymentStatus(string paymentIntentId, OrderStatus orderStatus)
+        {
+            var spec = new OrderByPaymentIntentIdSpecification(paymentIntentId);
+
+            var order = await this.unitOfWork.Repository<Order>().GetEntityWithSpec(spec);
+
+            if (order is null)
+            {
+                return default;
+            }
+
+            order.Status = orderStatus;
+
+            this.unitOfWork.Repository<Order>().Update(order);
+
+            _ = await this.unitOfWork.Complete();
+
+            return order;
         }
     }
 }
