@@ -37,6 +37,7 @@
             this.apiResponseBuilder = apiResponseBuilder;
         }
 
+        [Cached(600)]
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductDto>> GetProduct(int id)
         {
@@ -53,6 +54,7 @@
             };
         }
 
+        [Cached(600)]
         [HttpGet("brands")]
         public async Task<ActionResult<ICollection<ProductBrand>>> GetProductBrands()
         {
@@ -61,6 +63,7 @@
             return this.Ok(productBrands);
         }
 
+        [Cached(600)]
         [HttpGet]
         public async Task<ActionResult<Pagination<Product>>> GetProducts([FromQuery] ProductSpecParams productSpecParams)
         {
@@ -75,6 +78,7 @@
             return this.Ok(new Pagination<ProductDto>(productSpecParams.PageIndex, productSpecParams.PageSize, totalItems, data));
         }
 
+        [Cached(600)]
         [HttpGet("types")]
         public async Task<ActionResult<ICollection<ProductType>>> GetProductTypes()
         {
