@@ -16,6 +16,7 @@ import { of } from 'rxjs/internal/observable/of';
 })
 export class ShopService {
   private baseUrl = environment.apiUrl;
+  private products: IProduct[] = [];
   private brands: IBrand[] = [];
   private productTypes: IProductType[] = [];
 
@@ -58,12 +59,18 @@ export class ShopService {
       .get<IPagination>(this.baseUrl + 'products', { observe: 'response', params })
       .pipe(
         map((response) => {
+          this.products = response.body.data;
           return response.body;
         })
       );
   }
 
   getProduct(id: number): Observable<IProduct> {
+    const product = this.products.find(p => p.id === id);
+    if (product) {
+      return of(product);
+    }
+
     return this.http.get<IProduct>(this.baseUrl + 'products/' + id);
   }
 
