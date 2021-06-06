@@ -9,17 +9,29 @@ import { Observable } from 'rxjs';
 import { ShopParams } from '../shared/models/shopParams';
 import { IProduct } from '../shared/models/product';
 import { environment } from 'src/environments/environment';
+import { of } from 'rxjs/internal/observable/of';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ShopService {
   private baseUrl = environment.apiUrl;
+  private brands: IBrand[] = [];
 
   constructor(private http: HttpClient) {}
 
   getBrands(): Observable<IBrand[]> {
-    return this.http.get<IBrand[]>(this.baseUrl + 'products/brands');
+    if (this.brands && this.brands.length > 0) {
+      return of(this.brands);
+    }
+
+    return this.http.get<IBrand[]>(this.baseUrl + 'products/brands')
+      .pipe(
+        map(response => {
+          this.brands = response;
+          return this.brands;
+        })
+      );
   }
 
   getProducts(shopParams: ShopParams): Observable<IPagination> {
