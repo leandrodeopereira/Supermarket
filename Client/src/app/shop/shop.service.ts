@@ -17,6 +17,7 @@ import { of } from 'rxjs/internal/observable/of';
 export class ShopService {
   private baseUrl = environment.apiUrl;
   private brands: IBrand[] = [];
+  private productTypes: IProductType[] = [];
 
   constructor(private http: HttpClient) {}
 
@@ -67,6 +68,16 @@ export class ShopService {
   }
 
   getProductTypes(): Observable<IProductType[]> {
-    return this.http.get<IProductType[]>(this.baseUrl + 'products/types');
+    if (this.productTypes && this.productTypes.length > 0) {
+      return of(this.productTypes);
+    }
+
+    return this.http.get<IProductType[]>(this.baseUrl + 'products/types')
+      .pipe(
+        map(response => {
+          this.productTypes = response;
+          return this.productTypes;
+        })
+      );
   }
 }
