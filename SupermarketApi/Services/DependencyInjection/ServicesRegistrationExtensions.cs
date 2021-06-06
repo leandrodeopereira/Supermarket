@@ -15,7 +15,8 @@
                 .AddScoped<IOrderService, OrderService>()
                 .AddScoped<IPaymentService, PaymentService>()
                 .AddScoped<ITokenService, TokenService>()
-                .AddScoped<IUnitOfWork, UnitOfWork>();
+                .AddScoped<IUnitOfWork, UnitOfWork>()
+                .AddSingleton<IResponseCacheService, ResponseCacheService>();
         }
     }
 }
