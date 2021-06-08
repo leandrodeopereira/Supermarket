@@ -9,7 +9,7 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { PagingHeaderComponent } from './components/paging-header/paging-header.component';
 import { PagerComponent } from './components/pager/pager.component';
 import { OrderTotalsComponent } from './components/order-totals/order-totals.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { StepperComponent } from './components/stepper/stepper.component';
 import { TextInputComponent } from './components/text-input/text-input.component';
@@ -29,6 +29,7 @@ import { TextInputComponent } from './components/text-input/text-input.component
     BsDropdownModule.forRoot(),
     PaginationModule.forRoot(),
     CarouselModule.forRoot(),
+    FormsModule,
     ReactiveFormsModule,
     RouterModule,
   ],
@@ -37,6 +38,7 @@ import { TextInputComponent } from './components/text-input/text-input.component
     BsDropdownModule,
     CarouselModule,
     CdkStepperModule,
+    FormsModule,
     OrderTotalsComponent,
     PagingHeaderComponent,
     PagerComponent,

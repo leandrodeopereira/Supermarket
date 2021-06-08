@@ -20,7 +20,9 @@ export class ShopService {
   private brands: IBrand[] = [];
   private productTypes: IProductType[] = [];
   private pagination = new Pagination();
-  private shopParams = new ShopParams()
+  private shopParams = new ShopParams();
+  private productCache = new Map(); 
+
   constructor(private http: HttpClient) {}
 
   getBrands(): Observable<IBrand[]> {
@@ -37,7 +39,20 @@ export class ShopService {
       );
   }
 
-  getProducts(): Observable<IPagination> {
+  getProducts(useCache: boolean): Observable<IPagination> {
+    if (!useCache) {
+      this.productCache = new Map();
+    }
+
+    if (this.productCache.size > 0 && useCache) {
+      var key = this.createKeyFromObject(this.shopParams);
+      if(this.productCache.has(key)) {
+        this.pagination.data = this.productCache.get(key);
+        
+        return of(this.pagination);
+      }
+    }
+
     let params = new HttpParams();
 
     if (this.shopParams.brandId !== 0) {
@@ -60,7 +75,7 @@ export class ShopService {
       .get<IPagination>(this.baseUrl + 'products', { observe: 'response', params })
       .pipe(
         map((response) => {
-          this.products = [...this.products, ...response.body.data];
+          this.productCache.set(this.createKeyFromObject(this.shopParams), response.body.data) ;
           this.pagination = response.body;
           return this.pagination;
         })
@@ -76,10 +91,11 @@ export class ShopService {
   }
 
   getProduct(id: number): Observable<IProduct> {
-    const product = this.products.find(p => p.id === id);
-    if (product) {
+    this.productCache.forEach((products: IProduct[]) => {
+      let product = products.find(p => p.id === id);
+
       return of(product);
-    }
+    })
 
     return this.http.get<IProduct>(this.baseUrl + 'products/' + id);
   }
@@ -96,5 +112,9 @@ export class ShopService {
           return this.productTypes;
         })
       );
+  }
+
+  private createKeyFromObject(obj: Object): Object {
+    return Object.values(obj).join('-')
   }
 }
