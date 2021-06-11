@@ -1,11 +1,13 @@
 namespace SupermarketApi
 {
     using System.Diagnostics.CodeAnalysis;
+    using System.IO;
     using AutoMapper;
     using MediatR;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.FileProviders;
     using SupermarketApi.Data.DependencyInjection;
     using SupermarketApi.Dtos.Validators.DependencyInjection;
     using SupermarketApi.Extensions;
@@ -34,6 +36,12 @@ namespace SupermarketApi
                 .UseHttpsRedirection()
                 .UseRouting()
                 .UseStaticFiles()
+                .UseStaticFiles(new StaticFileOptions
+                {
+                    FileProvider = new PhysicalFileProvider(
+                        Path.Combine(Directory.GetCurrentDirectory(), "Content")),
+                    RequestPath = "/content"
+                })
                 .UseClientCorsPolicy()
                 .UseAuthentication()
                 .UseAuthorization()
