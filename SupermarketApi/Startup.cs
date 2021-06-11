@@ -46,7 +46,11 @@ namespace SupermarketApi
                 .UseAuthentication()
                 .UseAuthorization()
                 .UseSwaggerDocumentation()
-                .UseEndpoints(endpoints => endpoints.MapControllers());
+                .UseEndpoints(endpoints =>
+                {
+                    _ = endpoints.MapControllers();
+                    _ = endpoints.MapFallbackToController("Index", "Fallback");
+                });
         }
 
         public void ConfigureServices(IServiceCollection serviceCollection)
