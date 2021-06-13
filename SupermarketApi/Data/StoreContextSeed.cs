@@ -27,9 +27,12 @@
 
                     var brands = JsonSerializer.Deserialize<ICollection<ProductBrand>>(brandsData);
 
-                    foreach (var item in brands)
+                    if (brands is not null)
                     {
-                        _ = storeContext.ProductBrands.Add(item);
+                        foreach (var item in brands)
+                        {
+                            _ = storeContext.ProductBrands.Add(item);
+                        }
                     }
 
                     _ = await storeContext.SaveChangesAsync().ConfigureAwait(false);
@@ -41,9 +44,12 @@
 
                     var types = JsonSerializer.Deserialize<ICollection<ProductType>>(typesData);
 
-                    foreach (var item in types)
+                    if (types is not null)
                     {
-                        _ = storeContext.ProductTypes.Add(item);
+                        foreach (var item in types)
+                        {
+                            _ = storeContext.ProductTypes.Add(item);
+                        }
                     }
 
                     _ = await storeContext.SaveChangesAsync().ConfigureAwait(false);
@@ -55,9 +61,12 @@
 
                     var products = JsonSerializer.Deserialize<ICollection<Product>>(productsData);
 
-                    foreach (var item in products)
+                    if (products is not null)
                     {
-                        _ = storeContext.Products.Add(item);
+                        foreach (var item in products)
+                        {
+                            _ = storeContext.Products.Add(item);
+                        }
                     }
 
                     _ = await storeContext.SaveChangesAsync().ConfigureAwait(false);
@@ -69,9 +78,12 @@
 
                     var methods = JsonSerializer.Deserialize<ICollection<DeliveryMethod>>(dmData);
 
-                    foreach (var method in methods)
+                    if (methods is not null)
                     {
-                        _ = storeContext.DeliveryMethods.Add(method);
+                        foreach (var method in methods)
+                        {
+                            _ = storeContext.DeliveryMethods.Add(method);
+                        }
                     }
 
                     _ = await storeContext.SaveChangesAsync().ConfigureAwait(false);
