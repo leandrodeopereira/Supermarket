@@ -25,7 +25,7 @@
             _ = ruleBuilder ?? throw new ArgumentNullException(nameof(ruleBuilder));
             _ = userManager ?? throw new ArgumentNullException(nameof(userManager));
 
-            return ruleBuilder.SetValidator(new DuplicateEmailValidator(userManager));
+            return ruleBuilder.SetAsyncValidator(new DuplicateEmailValidator<T>(userManager));
         }
     }
 }
