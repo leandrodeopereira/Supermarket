@@ -2,7 +2,6 @@ namespace SupermarketApi
 {
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
-    using AutoMapper;
     using MediatR;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.Extensions.Configuration;
