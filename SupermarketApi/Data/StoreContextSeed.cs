@@ -78,17 +78,17 @@
                 }
             }
             catch (Exception ex) when (
-                ex is ArgumentException ||
-                ex is ArgumentNullException ||
-                ex is DbUpdateConcurrencyException ||
-                ex is DbUpdateException ||
-                ex is DirectoryNotFoundException ||
-                ex is FileNotFoundException ||
-                ex is IOException ||
-                ex is JsonException ||
-                ex is NotSupportedException ||
-                ex is PathTooLongException ||
-                ex is UnauthorizedAccessException)
+                ex is ArgumentException or
+                ArgumentNullException or
+                DbUpdateConcurrencyException or
+                DbUpdateException or
+                DirectoryNotFoundException or
+                FileNotFoundException or
+                IOException or
+                JsonException or
+                NotSupportedException or
+                PathTooLongException or
+                UnauthorizedAccessException)
             {
                 var logger = loggerFactory.CreateLogger<StoreContextSeed>();
                 logger.LogError(ex, ex.Message);
