@@ -15,7 +15,7 @@
             _ = serviceCollection ?? throw new ArgumentNullException(nameof(serviceCollection));
 
             return serviceCollection
-                .AddDbContext<StoreContext>(x => x.UseSqlite(configuration.GetConnectionString("DefaultConnection")));
+                .AddDbContext<StoreContext>(x => x.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
         }
     }
 }

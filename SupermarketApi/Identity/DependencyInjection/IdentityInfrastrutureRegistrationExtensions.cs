@@ -26,7 +26,7 @@
             _ = builder.AddSignInManager<SignInManager<AppUser>>();
 
             return serviceCollection
-                .AddDbContext<AppIdentityDbContext>(x => x.UseSqlite(configuration.GetConnectionString("IdentityConnection")))
+                .AddDbContext<AppIdentityDbContext>(x => x.UseNpgsql(configuration.GetConnectionString("IdentityConnection")))
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options =>
                     {

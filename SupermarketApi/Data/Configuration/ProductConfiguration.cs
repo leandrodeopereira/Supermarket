@@ -13,7 +13,7 @@
 
             _ = builder.Property(p => p.Id).IsRequired();
             _ = builder.Property(p => p.Name).HasMaxLength(100);
-            _ = builder.Property(p => p.Description).HasMaxLength(180);
+            _ = builder.Property(p => p.Description);
             _ = builder.Property(p => p.Price).HasColumnType("decimal(18,2)");
             _ = builder.Property(p => p.PicturePath).IsRequired();
             _ = builder.HasOne(b => b.ProductBrand).WithMany()
