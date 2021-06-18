@@ -5,6 +5,7 @@
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
+    using System.Reflection;
     using System.Text.Json;
     using System.Threading.Tasks;
     using Microsoft.EntityFrameworkCore;
@@ -21,9 +22,11 @@
 
             try
             {
+                var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
                 if (!storeContext.ProductBrands.Any())
                 {
-                    var brandsData = File.ReadAllText("Data/SeedData/brands.json");
+                    var brandsData = File.ReadAllText(path + @"/Data/SeedData/brands.json");
 
                     var brands = JsonSerializer.Deserialize<ICollection<ProductBrand>>(brandsData);
 
@@ -40,7 +43,7 @@
 
                 if (!storeContext.ProductTypes.Any())
                 {
-                    var typesData = File.ReadAllText("Data/SeedData/types.json");
+                    var typesData = File.ReadAllText(path + @"/Data/SeedData/types.json");
 
                     var types = JsonSerializer.Deserialize<ICollection<ProductType>>(typesData);
 
@@ -57,7 +60,7 @@
 
                 if (!storeContext.Products.Any())
                 {
-                    var productsData = File.ReadAllText("Data/SeedData/products.json");
+                    var productsData = File.ReadAllText(path + @"/Data/SeedData/products.json");
 
                     var products = JsonSerializer.Deserialize<ICollection<Product>>(productsData);
 
@@ -74,7 +77,7 @@
 
                 if (!storeContext.DeliveryMethods.Any())
                 {
-                    var dmData = File.ReadAllText("Data/SeedData/delivery.json");
+                    var dmData = File.ReadAllText(path + @"/Data/SeedData/delivery.json");
 
                     var methods = JsonSerializer.Deserialize<ICollection<DeliveryMethod>>(dmData);
 

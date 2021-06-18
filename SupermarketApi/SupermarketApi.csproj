@@ -42,4 +42,8 @@
     </AssemblyAttribute>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="Data\SeedData\**" CopyToOutputDirectory="PreserveNewest"></None>
+  </ItemGroup>
+
 </Project>
