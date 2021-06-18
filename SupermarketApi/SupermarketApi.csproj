@@ -44,6 +44,7 @@
 
   <ItemGroup>
     <None Include="Data\SeedData\**" CopyToOutputDirectory="PreserveNewest"></None>
+    <Content Include="Content\**" CopyToPublishDirectory="PreserveNewest"></Content>
   </ItemGroup>
 
 </Project>
