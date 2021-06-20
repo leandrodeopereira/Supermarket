@@ -24,10 +24,10 @@
             public Order Order { get; }
         }
 
-        public static implicit operator CreateOrderResponse(BasketNotFound _) => new CreateOrderResponse(_);
+        public static implicit operator CreateOrderResponse(BasketNotFound _) => new(_);
 
-        public static implicit operator CreateOrderResponse(ErrorCreatingOrder _) => new CreateOrderResponse(_);
+        public static implicit operator CreateOrderResponse(ErrorCreatingOrder _) => new(_);
 
-        public static implicit operator CreateOrderResponse(OrderCreated _) => new CreateOrderResponse(_);
+        public static implicit operator CreateOrderResponse(OrderCreated _) => new(_);
     }
 }
