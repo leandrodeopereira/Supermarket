@@ -70,7 +70,7 @@
 
             var result = await this.unitOfWork.Complete();
 
-            return result <= 0 ? new ErrorCreatingOrder() : (CreateOrderResponse)new OrderCreated(order);
+            return result <= 0 ? new ErrorCreatingOrder() : new OrderCreated(order);
         }
     }
 }
