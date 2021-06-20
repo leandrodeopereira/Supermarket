@@ -17,7 +17,6 @@ namespace SupermarketApi
     using SupermarketApi.Services.DependencyInjection;
 
     [ExcludeFromCodeCoverage]
-    [SuppressMessage("Performance", "CA1812: Avoid uninstantiated internal classes", Justification = "Instantiated through reflection")]
     internal sealed class Startup
     {
         public Startup(IConfiguration configuration)

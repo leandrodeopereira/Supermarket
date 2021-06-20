@@ -1,7 +1,6 @@
 ﻿namespace SupermarketApi.Middleware
 {
     using System;
-    using System.Diagnostics.CodeAnalysis;
     using System.Text.Json;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Http;
@@ -10,7 +9,6 @@
     using SupermarketApi.Errors;
     using static System.Net.HttpStatusCode;
 
-    [SuppressMessage("Design", "CA1031: Do not catch general exception types", Justification = "Unknown exceptions.")]
     public sealed class ExceptionMiddleware
     {
         private readonly RequestDelegate next;

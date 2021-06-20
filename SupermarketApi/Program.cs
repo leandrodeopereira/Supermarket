@@ -16,8 +16,6 @@ namespace SupermarketApi
     [ExcludeFromCodeCoverage]
     public sealed class Program
     {
-        [SuppressMessage("Globalization", "CA1303: Do not pass literals as localized parameters", Justification = "Library is not localized.")]
-        [SuppressMessage("Design", "CA1031: Do not catch general exception types", Justification = "For now, unknown exceptions.")]
         public static async Task Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();

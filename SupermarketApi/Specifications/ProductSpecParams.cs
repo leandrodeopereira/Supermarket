@@ -1,8 +1,6 @@
 ﻿namespace SupermarketApi.Specifications
 {
-    using System.Diagnostics.CodeAnalysis;
 
-    [SuppressMessage("Globalization", "CA1304: Specify CultureInfo", Justification = "StringComparison is not supported by EF")]
     public sealed class ProductSpecParams
     {
         private const int MaxPageSize = 50;
