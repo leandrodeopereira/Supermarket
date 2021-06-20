@@ -11,19 +11,20 @@
     using SupermarketApi.Services;
     using Order = Entities.OrderAggregate.Order;
     using static Entities.OrderAggregate.OrderStatus;
-    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Options;
+    using SupermarketApi.Configuration;
 
     [ApiController]
     [Route("api/[controller]")]
     public class PaymentsController : ControllerBase
     {
         private readonly IPaymentService paymentService;
-        private readonly IConfiguration configuration;
+        private readonly StripeSettings stripeSettings;
 
-        public PaymentsController(IPaymentService paymentService, IConfiguration configuration)
+        public PaymentsController(IPaymentService paymentService, IOptions<StripeSettings> options)
         {
             this.paymentService = paymentService;
-            this.configuration = configuration;
+            this.stripeSettings = options.Value;
         }
 
         [Authorize]
@@ -52,7 +53,7 @@
             var stripeEvent = EventUtility.ConstructEvent(
                 json,
                 this.Request.Headers["Stripe-Signature"],
-                this.configuration["StripeSettings:WebhookSecret"]);
+                this.stripeSettings.WebhookSecret!);
 
             PaymentIntent intent;
             Order? order = default;

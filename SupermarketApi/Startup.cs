@@ -7,6 +7,7 @@ namespace SupermarketApi
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.FileProviders;
+    using SupermarketApi.Configuration.DependencyInjection;
     using SupermarketApi.Data.DependencyInjection;
     using SupermarketApi.Dtos.Validators.DependencyInjection;
     using SupermarketApi.Extensions;
@@ -55,6 +56,7 @@ namespace SupermarketApi
         {
             _ = serviceCollection
                 .AddControllers().Services
+                .AddCutomConfiguration(this.Configuration)
                 .AddApplicationServices()
                 .AddAutoMapper(typeof(MappingProfiles))
                 .AddClientCorsPolicy(this.Configuration)

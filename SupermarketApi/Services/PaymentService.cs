@@ -12,25 +12,27 @@
     using SupermarketApi.Specifications;
     using Product = Entities.Product;
     using Order = Entities.OrderAggregate.Order;
+    using Microsoft.Extensions.Options;
+    using SupermarketApi.Configuration;
 
     public class PaymentService : IPaymentService
     {
         private readonly IBasketRepository basketRepository;
         private readonly IUnitOfWork unitOfWork;
-        private readonly IConfiguration configuration;
+        private readonly StripeSettings stripeSettings;
 
-        public PaymentService(IBasketRepository basketRepository, IUnitOfWork unitOfWork, IConfiguration configuration)
+        public PaymentService(IBasketRepository basketRepository, IUnitOfWork unitOfWork, IOptions<StripeSettings> options)
         {
             this.basketRepository = basketRepository;
             this.unitOfWork = unitOfWork;
-            this.configuration = configuration;
+            this.stripeSettings = options.Value;
         }
 
         async Task<CustomerBasket?> IPaymentService.CreateOrUpdatePaymentIntent(string basketId)
         {
             _ = basketId ?? throw new ArgumentNullException(nameof(basketId));
 
-            StripeConfiguration.ApiKey = this.configuration["StripeSettings:SecretKey"];
+            StripeConfiguration.ApiKey = this.stripeSettings.SecretKey!;
 
             var basket = await this.basketRepository.GetBasketAsync(basketId);
             var shippingPrice = 0m;

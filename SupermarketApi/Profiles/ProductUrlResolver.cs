@@ -2,17 +2,18 @@
 {
     using System;
     using AutoMapper;
-    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Options;
+    using SupermarketApi.Configuration;
     using SupermarketApi.Dtos;
     using SupermarketApi.Entities;
 
     public class ProductUrlResolver : IValueResolver<Product, ProductDto, Uri>
     {
-        private readonly IConfiguration configuration;
+        private readonly ApiSettings apiSettings;
 
-        public ProductUrlResolver(IConfiguration configuration)
+        public ProductUrlResolver(IOptions<ApiSettings> options)
         {
-            this.configuration = configuration;
+            this.apiSettings = options.Value;
         }
 
         public Uri Resolve(Product source, ProductDto destination, Uri destMember, ResolutionContext context)
@@ -22,7 +23,7 @@
             _ = context ?? throw new ArgumentNullException(nameof(context));
 
             return source.PicturePath != null ?
-                new Uri($"{this.configuration["ApiUrl"]}{source.PicturePath}") :
+                new Uri($"{this.apiSettings.ApiUrl!}{source.PicturePath}") :
                 throw new InvalidOperationException();
         }
     }

@@ -5,19 +5,20 @@
     using System.IdentityModel.Tokens.Jwt;
     using System.Security.Claims;
     using System.Text;
-    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Options;
     using Microsoft.IdentityModel.Tokens;
+    using SupermarketApi.Configuration;
     using SupermarketApi.Entities.Identity;
 
     internal sealed class TokenService : ITokenService
     {
-        private readonly IConfiguration configuration;
+        private readonly TokenOptions token;
         private readonly SymmetricSecurityKey key;
 
-        public TokenService(IConfiguration configuration)
+        public TokenService(IOptions<TokenOptions> options)
         {
-            this.configuration = configuration;
-            this.key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.configuration["Token:Key"]));
+            this.token = options.Value;
+            this.key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.token.Key!));
         }
 
         string ITokenService.CreateToken(AppUser user)
@@ -35,7 +36,7 @@
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.Now.AddDays(7),
                 SigningCredentials = credentials,
-                Issuer = this.configuration["Token:Issuer"],
+                Issuer = this.token.Issuer!,
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
