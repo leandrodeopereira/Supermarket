@@ -2,12 +2,12 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using MediatR;
     using SupermarketApi.Entities;
     using SupermarketApi.Entities.OrderAggregate;
+    using SupermarketApi.Mapping;
     using SupermarketApi.Repositories;
     using SupermarketApi.Services;
     using SupermarketApi.Specifications;
@@ -18,15 +18,18 @@
         private readonly IUnitOfWork unitOfWork;
         private readonly IBasketRepository basketRepository;
         private readonly IPaymentService paymentService;
+        private readonly IBuilder<OrderContext, Order> orderFromOrderContextBuilder;
 
         public CreateOrderRequestHandler(
             IUnitOfWork unitOfWork,
             IBasketRepository basketRepository,
-            IPaymentService paymentService)
+            IPaymentService paymentService,
+            IBuilder<OrderContext, Order> orderFromOrderContextBuilder)
         {
             this.unitOfWork = unitOfWork;
             this.basketRepository = basketRepository;
             this.paymentService = paymentService;
+            this.orderFromOrderContextBuilder = orderFromOrderContextBuilder;
         }
 
         async Task<CreateOrderResponse> IRequestHandler<CreateOrderRequest, CreateOrderResponse>.Handle(
@@ -42,18 +45,17 @@
                 return new BasketNotFound();
             }
 
-            var items = new List<OrderItem>();
+            var productItems = new List<Product>();
             foreach (var item in basket.Items)
             {
-                var productItem = await this.unitOfWork.Repository<Product>().GetByIdAsync(item.Id).ConfigureAwait(false);
-                var itemOrdered = new ProductItemOrdered(productItem.Id, productItem.Name, productItem.PicturePath);
-                var orderItem = new OrderItem(itemOrdered, productItem.Price, item.Quantity);
-                items.Add(orderItem);
+                productItems.Add(await this.unitOfWork.Repository<Product>().GetByIdAsync(item.Id).ConfigureAwait(false));
             }
 
             var deliveryMethod = await this.unitOfWork.Repository<DeliveryMethod>().GetByIdAsync(request.DeliveryMethodId).ConfigureAwait(false);
 
-            var subtotal = items.Sum(item => item.Price * item.Quantity);
+            var orderContext = new OrderContext(basket, request.BuyerEmail, deliveryMethod, productItems, request.ShippingAddress);
+
+            var order = this.orderFromOrderContextBuilder.Build(orderContext);
 
             var spec = new OrderByPaymentIntentIdSpecification(basket.PaymentIntentId);
             var existingOrder = await this.unitOfWork.Repository<Order>().GetEntityWithSpec(spec);
@@ -63,8 +65,6 @@
                 this.unitOfWork.Repository<Order>().Delete(existingOrder);
                 _ = await this.paymentService.CreateOrUpdatePaymentIntent(basket.PaymentIntentId);
             }
-
-            var order = new Order(items, request.BuyerEmail, basket.PaymentIntentId, request.ShippingAddress, deliveryMethod, subtotal);
 
             this.unitOfWork.Repository<Order>().Add(order);
 
