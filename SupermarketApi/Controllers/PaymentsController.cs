@@ -10,11 +10,11 @@
     using Stripe;
     using SupermarketApi.Configuration;
     using SupermarketApi.Entities;
+    using SupermarketApi.Entities.OrderAggregate;
     using SupermarketApi.Errors;
+    using SupermarketApi.Mapping;
     using SupermarketApi.RequestHandlers;
     using SupermarketApi.Services;
-    using static Entities.OrderAggregate.OrderStatus;
-    using Order = Entities.OrderAggregate.Order;
 
     [ApiController]
     [Route("api/[controller]")]
@@ -23,11 +23,17 @@
         private readonly IPaymentService paymentService;
         private readonly IMediator mediator;
         private readonly StripeSettings stripeSettings;
+        private readonly IBuilder<string, OrderStatus> builder;
 
-        public PaymentsController(IPaymentService paymentService, IOptions<StripeSettings> options, IMediator mediator)
+        public PaymentsController(
+            IPaymentService paymentService,
+            IOptions<StripeSettings> options,
+            IMediator mediator,
+            IBuilder<string, OrderStatus> builder)
         {
             this.paymentService = paymentService;
             this.mediator = mediator;
+            this.builder = builder;
             this.stripeSettings = options.Value;
         }
 
@@ -57,26 +63,8 @@
                 this.Request.Headers["Stripe-Signature"],
                 this.stripeSettings.WebhookSecret!);
 
-            PaymentIntent intent;
-            Order? order = default;
-
-            switch (stripeEvent.Type)
-            {
-                case "payment_intent.succeeded":
-                    intent = (PaymentIntent)stripeEvent.Data.Object;
-                    order = await this.paymentService.UpdateOrderPaymentStatus(intent.Id, PaymentReceived);
-                    break;
-
-                case "payment_intent.payment_failed":
-                    intent = (PaymentIntent)stripeEvent.Data.Object;
-                    order = await this.paymentService.UpdateOrderPaymentStatus(intent.Id, PaymentFailed);
-                    break;
-
-                default:
-                    intent = (PaymentIntent)stripeEvent.Data.Object;
-                    order = await this.paymentService.UpdateOrderPaymentStatus(intent.Id, PaymentUnknown);
-                    break;
-            }
+            var intent = (PaymentIntent)stripeEvent.Data.Object;
+            var order = await this.paymentService.UpdateOrderPaymentStatus(intent.Id, this.builder.Build(stripeEvent.Type));
 
             return order switch
             {
