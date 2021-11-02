@@ -73,6 +73,8 @@
                     break;
 
                 default:
+                    intent = (PaymentIntent)stripeEvent.Data.Object;
+                    order = await this.paymentService.UpdateOrderPaymentStatus(intent.Id, PaymentUnknown);
                     break;
             }
 

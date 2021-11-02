@@ -4,6 +4,9 @@
 
     public enum OrderStatus
     {
+        [EnumMember(Value = "Payment Unknown")]
+        PaymentUnknown,
+
         [EnumMember(Value = "Pending")]
         Pending,
 
