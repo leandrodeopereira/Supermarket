@@ -13,7 +13,6 @@
 
             return serviceCollection
                 .AddScoped<IOrderService, OrderService>()
-                .AddScoped<IPaymentService, PaymentService>()
                 .AddScoped<ITokenService, TokenService>()
                 .AddScoped<IUnitOfWork, UnitOfWork>()
                 .AddSingleton<IResponseCacheService, ResponseCacheService>();

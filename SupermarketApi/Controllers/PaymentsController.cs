@@ -14,24 +14,20 @@
     using SupermarketApi.Errors;
     using SupermarketApi.Mapping;
     using SupermarketApi.RequestHandlers;
-    using SupermarketApi.Services;
 
     [ApiController]
     [Route("api/[controller]")]
     public class PaymentsController : ControllerBase
     {
-        private readonly IPaymentService paymentService;
         private readonly IMediator mediator;
         private readonly StripeSettings stripeSettings;
         private readonly IBuilder<string, OrderStatus> builder;
 
         public PaymentsController(
-            IPaymentService paymentService,
             IOptions<StripeSettings> options,
             IMediator mediator,
             IBuilder<string, OrderStatus> builder)
         {
-            this.paymentService = paymentService;
             this.mediator = mediator;
             this.builder = builder;
             this.stripeSettings = options.Value;
@@ -64,13 +60,11 @@
                 this.stripeSettings.WebhookSecret!);
 
             var intent = (PaymentIntent)stripeEvent.Data.Object;
-            var order = await this.paymentService.UpdateOrderPaymentStatus(intent.Id, this.builder.Build(stripeEvent.Type));
+            var updateOrderPaymentStatusResponse = await this.mediator.Send(new UpdateOrderPaymentStatusRequest(intent.Id, this.builder.Build(stripeEvent.Type)));
 
-            return order switch
-            {
-                { } => this.Ok(order),
-                _ => this.NotFound(),
-            };
+            return updateOrderPaymentStatusResponse.Match<ActionResult>(
+                orderPaymentStatusUpdated => this.Ok(updateOrderPaymentStatusResponse),
+                OrderNotFound => this.NotFound());
         }
     }
 }
