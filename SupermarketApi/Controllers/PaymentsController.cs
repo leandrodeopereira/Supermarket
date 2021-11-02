@@ -29,14 +29,14 @@
 
         [Authorize]
         [HttpPost("{basketId}")]
-        public async Task<ActionResult<CustomerBasket>> CreateOrUpdatePaymentIntent(string basketId)
+        public async Task<ActionResult<CustomerBasket>> SavePaymentIntent(string basketId)
         {
             if (basketId is null)
             {
                 return this.BadRequest("The 'basketId' cannot be null.");
             }
 
-            var updatedBasket = await this.paymentService.CreateOrUpdatePaymentIntent(basketId);
+            var updatedBasket = await this.paymentService.SavePaymentIntent(basketId);
 
             return updatedBasket switch
             {

@@ -6,7 +6,7 @@
 
     public interface IPaymentService
     {
-        Task<CustomerBasket?> CreateOrUpdatePaymentIntent(string basketId);
+        Task<CustomerBasket?> SavePaymentIntent(string basketId);
 
         Task<Order?> UpdateOrderPaymentStatus(string paymentIntentId, OrderStatus orderStatus);
     }

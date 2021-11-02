@@ -63,7 +63,7 @@
             if (existingOrder is Order)
             {
                 this.unitOfWork.Repository<Order>().Delete(existingOrder);
-                _ = await this.paymentService.CreateOrUpdatePaymentIntent(basket.PaymentIntentId);
+                _ = await this.paymentService.SavePaymentIntent(basket.PaymentIntentId);
             }
 
             this.unitOfWork.Repository<Order>().Add(order);

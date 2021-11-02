@@ -28,7 +28,7 @@
             this.stripeSettings = options.Value;
         }
 
-        async Task<CustomerBasket?> IPaymentService.CreateOrUpdatePaymentIntent(string basketId)
+        async Task<CustomerBasket?> IPaymentService.SavePaymentIntent(string basketId)
         {
             _ = basketId ?? throw new ArgumentNullException(nameof(basketId));
 
