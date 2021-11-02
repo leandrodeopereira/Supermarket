@@ -4,16 +4,15 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Options;
     using Stripe;
+    using SupermarketApi.Configuration;
     using SupermarketApi.Entities;
     using SupermarketApi.Entities.OrderAggregate;
     using SupermarketApi.Repositories;
     using SupermarketApi.Specifications;
-    using Product = Entities.Product;
     using Order = Entities.OrderAggregate.Order;
-    using Microsoft.Extensions.Options;
-    using SupermarketApi.Configuration;
+    using Product = Entities.Product;
 
     public class PaymentService : IPaymentService
     {
