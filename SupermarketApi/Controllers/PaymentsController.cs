@@ -3,27 +3,31 @@
     using System.IO;
     using System.Net;
     using System.Threading.Tasks;
+    using MediatR;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Options;
     using Stripe;
+    using SupermarketApi.Configuration;
     using SupermarketApi.Entities;
     using SupermarketApi.Errors;
+    using SupermarketApi.RequestHandlers;
     using SupermarketApi.Services;
-    using Order = Entities.OrderAggregate.Order;
     using static Entities.OrderAggregate.OrderStatus;
-    using Microsoft.Extensions.Options;
-    using SupermarketApi.Configuration;
+    using Order = Entities.OrderAggregate.Order;
 
     [ApiController]
     [Route("api/[controller]")]
     public class PaymentsController : ControllerBase
     {
         private readonly IPaymentService paymentService;
+        private readonly IMediator mediator;
         private readonly StripeSettings stripeSettings;
 
-        public PaymentsController(IPaymentService paymentService, IOptions<StripeSettings> options)
+        public PaymentsController(IPaymentService paymentService, IOptions<StripeSettings> options, IMediator mediator)
         {
             this.paymentService = paymentService;
+            this.mediator = mediator;
             this.stripeSettings = options.Value;
         }
 
@@ -36,13 +40,11 @@
                 return this.BadRequest("The 'basketId' cannot be null.");
             }
 
-            var updatedBasket = await this.paymentService.SavePaymentIntent(basketId);
+            var updatedBasket = await this.mediator.Send(new SavePaymentIntentRequest(basketId));
 
-            return updatedBasket switch
-            {
-                { } => this.Ok(updatedBasket),
-                _ => this.BadRequest(new ApiResponse(HttpStatusCode.BadRequest, "Problem with your basket.")),
-            };
+            return updatedBasket.Match<ActionResult<CustomerBasket>>(
+                paymentIntentSaved => this.Ok(paymentIntentSaved.Basket),
+                basketNotFound => this.BadRequest(new ApiResponse(HttpStatusCode.BadRequest, "Problem with your basket.")));
         }
 
         [HttpPost("webhook")]

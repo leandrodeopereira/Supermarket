@@ -17,19 +17,19 @@
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IBasketRepository basketRepository;
-        private readonly IPaymentService paymentService;
         private readonly IBuilder<OrderContext, Order> orderFromOrderContextBuilder;
+        private readonly IMediator mediator;
 
         public CreateOrderRequestHandler(
             IUnitOfWork unitOfWork,
             IBasketRepository basketRepository,
-            IPaymentService paymentService,
-            IBuilder<OrderContext, Order> orderFromOrderContextBuilder)
+            IBuilder<OrderContext, Order> orderFromOrderContextBuilder,
+            IMediator mediator)
         {
             this.unitOfWork = unitOfWork;
             this.basketRepository = basketRepository;
-            this.paymentService = paymentService;
             this.orderFromOrderContextBuilder = orderFromOrderContextBuilder;
+            this.mediator = mediator;
         }
 
         async Task<CreateOrderResponse> IRequestHandler<CreateOrderRequest, CreateOrderResponse>.Handle(
@@ -63,7 +63,7 @@
             if (existingOrder is Order)
             {
                 this.unitOfWork.Repository<Order>().Delete(existingOrder);
-                _ = await this.paymentService.SavePaymentIntent(basket.Id);
+                _ = this.mediator.Send(new SavePaymentIntentRequest(basket.Id));
             }
 
             this.unitOfWork.Repository<Order>().Add(order);
